@@ -22,11 +22,23 @@ $(document).ready(function() {
       .attr("width", width)
       .attr("height", height);
 
-  svg.on("mousemove", function() {
-    var p = d3.mouse(this);
-    projection.rotate([λ(p[0]), φ(p[1])]);
-    svg.selectAll("path").attr("d", path);
-  });
+  //drag behaviour for globe dragging
+  var drag = d3.behavior.drag()
+    .on("drag", function() {
+      var p = d3.mouse(this);
+      projection.rotate([λ(p[0]), φ(p[1])]);
+      svg.selectAll("path").attr("d", path);
+      console.log("being dragged!", p);
+    });
+
+  //interactivity
+  svg.call(drag);
+  // svg.on("mousemove", function() {
+  //   var p = d3.mouse(this);
+  //   console.log(p);
+  //   projection.rotate([λ(p[0]), φ(p[1])]);
+  //   svg.selectAll("path").attr("d", path);
+  // });
 
   d3.json("js/world-110m.json", function(error, world) {
     if (error) throw error;
