@@ -24,11 +24,16 @@ $(document).ready(function() {
 
   //drag behaviour for globe dragging
   var drag = d3.behavior.drag()
+    .origin(function() {
+      var r = projection.rotate();
+      console.log(r);
+      // return {x: λ(r[0]), y: φ(r[1])};
+      return {x: r[0], y: r[1]}
+    })
     .on("drag", function() {
-      var p = d3.mouse(this);
-      projection.rotate([λ(p[0]), φ(p[1])]);
+      projection.rotate([λ(d3.event.x), φ(d3.event.y)]);
       svg.selectAll("path").attr("d", path);
-      console.log("being dragged!", p);
+      //console.log("being dragged!", d3.event);
     });
 
   //interactivity

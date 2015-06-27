@@ -23,6 +23,11 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
+.globe {
+  pointer-events: all;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
 
 
 /**
