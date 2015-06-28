@@ -8,9 +8,14 @@ $(document).ready(function() {
     .clipAngle(90);
   var path = d3.geo.path()
     .projection(projection);
+  var graticule = d3.geo.graticule();
   var svg = d3.select(".globe").append("svg")
     .attr("width", width)
     .attr("height", height);
+  svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
 
   svg.on("mousemove", function() {
     var p = d3.mouse(this);
