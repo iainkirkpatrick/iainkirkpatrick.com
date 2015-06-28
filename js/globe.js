@@ -12,17 +12,33 @@ $(document).ready(function() {
   var svg = d3.select(".globe").append("svg")
     .attr("width", width)
     .attr("height", height);
+
+  var drag = d3.behavior.drag()
+    .origin(function() {
+      var r = projection.rotate();
+      // console.log(r);
+      return {x: r[0], y: -r[1]}
+    })
+    .on("drag", function() {
+      projection.rotate([d3.event.x, -d3.event.y]);
+      svg.selectAll("path").attr("d", path);
+      console.log("being dragged!", d3.event);
+    })
+    .on("dragstart", function() {
+      console.log("start", projection.rotate());
+    })
+    .on("dragend", function() {
+      console.log("end", projection.rotate());
+    });
+
   svg.append("path")
     .datum(graticule)
     .attr("class", "graticule")
     .attr("d", path);
 
-  svg.on("mousemove", function() {
-    var p = d3.mouse(this);
-    console.log(p);
-    projection.rotate([(p[0]), -(p[1])]);
-    svg.selectAll("path").attr("d", path);
-  });
+  //for some reason, only occasionally works if drag is called
+  //after the country paths are drawn - too laggy?
+  svg.call(drag);
 
   d3.json("js/world-110m.json", function(error, world) {
     if (error) throw error;
@@ -32,8 +48,6 @@ $(document).ready(function() {
       .attr("class", "land")
       .attr("d", path);
   });
-
-
 });
 
 /* DAVIES VERSION */
