@@ -12,6 +12,13 @@ $(document).ready(function() {
     .attr("width", width)
     .attr("height", height);
 
+  svg.on("mousemove", function() {
+    var p = d3.mouse(this);
+    console.log(p);
+    projection.rotate([(p[0]), -(p[1])]);
+    svg.selectAll("path").attr("d", path);
+  });
+
   d3.json("js/world-110m.json", function(error, world) {
     if (error) throw error;
 
@@ -20,6 +27,8 @@ $(document).ready(function() {
       .attr("class", "land")
       .attr("d", path);
   });
+
+
 });
 
 /* DAVIES VERSION */
