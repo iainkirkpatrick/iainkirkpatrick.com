@@ -29,6 +29,12 @@ body {
   cursor: -moz-grab;
 }
 
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
 
 /**
  * Set `margin-bottom` to maintain vertical rhythm
