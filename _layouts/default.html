@@ -4,7 +4,7 @@
   {% include head.html %}
 
   <body>
-
+  {% include header.html %}
     <div class="page-content">
 
       <div class="globe wrapper"></div>
@@ -21,22 +21,23 @@
           </ul> -->
 
           <!-- Nav tabs -->
-          <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+          <ul id="navTabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">ABOUT</a></li>
+            <li role="presentation"><a href="#blog" aria-controls="blog" role="tab" data-toggle="tab">BLOG</a></li>
+            <li role="presentation"><a href="#projects" aria-controls="projects" role="tab" data-toggle="tab">PROJECTS</a></li>
           </ul>
 
           <!-- Tab panes -->
           <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="home">...</div>
-            <div role="tabpanel" class="tab-pane fade" id="profile">...</div>
-            <div role="tabpanel" class="tab-pane fade" id="messages">...</div>
-            <div role="tabpanel" class="tab-pane fade" id="settings">...</div>
+            <div role="tabpanel" class="tab-pane fade in active" id="about">
+              {{ content }}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="blog">
+              {% include footer.html %}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="projects">...</div>
           </div>
         </div>
-        {{ content }}
       </div>
     </div>
 

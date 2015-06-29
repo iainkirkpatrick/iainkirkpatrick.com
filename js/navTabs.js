@@ -1,5 +1,8 @@
 //http://getbootstrap.com/javascript/#tabs
-$('#myTabs a').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
-})
+$(document).ready(function() {
+  $('#navTabs a').click(function (e) {
+    e.preventDefault();
+    console.log(e);
+    $(this).tab('show');
+  })
+});
