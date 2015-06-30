@@ -50,10 +50,18 @@ svg {
   margin-right: auto;
 }
 
+.instructions {
+  text-align: center;
+}
+
 #navTabs > li {
   width: 33%;
   text-align: center;
   text-decoration: none;
+}
+
+.tab-pane {
+  margin-top: 25px;
 }
 
 /**
