@@ -23,8 +23,14 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
+h3 {
+  font-size: 1.4em;
+}
+
 .title {
-    font-size: 26px;
+    h1 {
+      font-size: 3em;
+    }
     line-height: 56px;
     letter-spacing: -1px;
     margin-bottom: 0;
