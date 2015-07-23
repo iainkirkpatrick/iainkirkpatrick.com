@@ -1,4 +1,4 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 
   var width = 500, height = 500;
   var projection = d3.geo.orthographic()
@@ -31,7 +31,7 @@ $(document).ready(function() {
   //after the country paths are drawn - too laggy?
   svg.call(drag);
 
-  d3.json("js/world-110m.json", function(error, world) {
+  d3.json(window.location.origin + "/js/world-110m.json", function(error, world) {
     if (error) throw error;
 
     svg.append("path")
@@ -39,4 +39,4 @@ $(document).ready(function() {
       .attr("class", "land")
       .attr("d", path);
   });
-});
+// });
