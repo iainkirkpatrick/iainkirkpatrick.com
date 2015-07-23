@@ -15,6 +15,7 @@ var visited = [
 
 var width = 500, height = 500;
 var projection = d3.geo.orthographic()
+  .rotate([174.88597,40.90056])
   .scale(200)
   .translate([width / 2, height / 2])
   .clipAngle(90);
