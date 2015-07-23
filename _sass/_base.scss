@@ -70,6 +70,14 @@ svg {
   margin-top: 25px;
 }
 
+.projects {
+  list-style-type: none;
+  margin-left: 0;
+  li {
+    margin-bottom: 30px;  
+  }
+}
+
 /**
  * Set `margin-bottom` to maintain vertical rhythm
  */
