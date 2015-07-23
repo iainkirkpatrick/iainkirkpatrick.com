@@ -1,3 +1,18 @@
+var visited = [
+  'AUS',
+  'NZL',
+  'POL',
+  'DEU',
+  'DNK',
+  'SWE',
+  'NOR',
+  'CZE',
+  'AUT',
+  'LIE',
+  'CHE',
+  'FRA'
+];
+
 var width = 500, height = 500;
 var projection = d3.geo.orthographic()
   .scale(200)
@@ -23,31 +38,31 @@ var drag = d3.behavior.drag()
     svg.selectAll("path").attr("d", path);
   });
 
-svg.append("path")
-  .datum(graticule)
-  .attr("class", "graticule")
-  .attr("d", path);
-
 //for some reason, only occasionally works if drag is called
 //after the country paths are drawn - too laggy?
 svg.call(drag);
+
 
 d3.json(window.location.origin + "/js/world110m.json", function(error, world) {
   if (error) throw error;
 
   var countries = topojson.feature(world, world.objects.countries).features
-  console.log(countries);
 
   svg.selectAll("path")
       .data(countries)
     .enter().append("path")
       .attr("class", function(d) {
-        console.log(d);
-        return "land";
+        if (visited.indexOf(d.properties.iso_a3) != -1) {
+          return "visited";
+        }
       })
       .attr("d", path);
-});
 
+  svg.insert("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+});
 
 /* works, but maxes out CPU - not really what d3.timer is designed for apparently... http://stackoverflow.com/questions/13390438/how-do-you-set-periodic-timers-in-d3-js */
 // d3.timer(function(){
