@@ -1,20 +1,20 @@
----
-layout: default
----
-
-<!-- blog content that gets fed into default.html -->
-<div class="home">
-
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TWOTHREE</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <img class="bestbrook" src="/assets/bestbrook.gif" />
+  <div class="row">
+    <a class="link" href="http://twitter.com/iaink23">
+      <i class="fa fa-twitter icon"></i>
+    </a>
+    <a class="link" href="http://github.com/iainkirkpatrick">
+      <i class="fa fa-github-alt icon"></i>
+    </a>
+  </div>
+</body>
+</html>

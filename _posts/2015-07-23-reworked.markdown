@@ -1,9 +1,0 @@
----
-layout: post
-title:  "reworked"
-date:   2015-07-23
----
-
-i've reworked the blog yet again. haven't yet ported over my previous posts (if i can, after having a big issue with the jekyll yeoman generator)... but here it is for now.
-
-maybe i'll wipeout style it shortly
