@@ -1,3 +1,1 @@
-[iainkirkpatrick.me](http://iainkirkpatrick.me)
-
-DA VINCI
+[iainkirkpatrick.com](http://iainkirkpatrick.com)
