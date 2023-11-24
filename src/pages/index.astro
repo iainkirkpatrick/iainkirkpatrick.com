@@ -15,14 +15,17 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 	<body class="flex flex-col items-center w-screen h-screen">
 		<div class="flex flex-col items-center w-full max-w-6xl h-full">
 			<Navbar />
-			<main class="px-12 flex w-full h-full gap-12">
-				<div class="flex flex-col w-1/2 gap-12">
-					<input
-						class="flex h-10 w-full py-2 text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50"
+			<main class="px-12 flex w-full gap-12">
+				<!-- https://css-tricks.com/auto-growing-inputs-textareas/#aa-other-ideas -->
+				<div class="inline-grid w-1/2 after:content-[attr(data-value)] after:text-sm after:py-1 after:row-start-2 after:row-end-auto after:col-start-1 after:col-end-auto after:invisible after:whitespace-pre-wrap">
+					<textarea
+						class="py-1 text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none row-start-2 row-end-auto col-start-1 col-end-auto overflow-auto appearance-none bg-none"
 						placeholder="Ask away..."
+						rows="1"
+						oninput="this.parentNode.dataset.value = this.value"
 					/>
 				</div>
-				<div class="pt-2 flex flex-col w-1/2">
+				<div class="pt-1 flex flex-col w-1/2 text-sm">
 					[output here]
 				</div>
 			</main>
