@@ -5,9 +5,11 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
+  console.log(context.request.body)
   const ai = new Ai(context.env.AI);
 
-  const input = { prompt: "What is the origin of the phrase Hello, World" }
+  // const input = { prompt: "What is the origin of the phrase Hello, World" }
+  const input = { prompt: context.request.body }
 
   const answer = await ai.run('@cf/meta/llama-2-7b-chat-int8', input)
 
