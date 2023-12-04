@@ -5,17 +5,59 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 ---
 <Main title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<div class="flex w-full gap-12">
-		<!-- https://css-tricks.com/auto-growing-inputs-textareas/#aa-other-ideas -->
-		<div class="inline-grid w-1/2 after:content-[attr(data-value)] after:text-sm after:py-1 after:row-start-2 after:row-end-auto after:col-start-1 after:col-end-auto after:invisible after:whitespace-pre-wrap">
+		<form class="flex flex-col items-start w-1/2">
 			<textarea
-				class="py-1 text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none row-start-2 row-end-auto col-start-1 col-end-auto overflow-auto appearance-none bg-none"
-				placeholder="Ask away..."
+				id="ask-textarea"
+				required
+				placeholder="Ask a question about Iain, his thoughts, projects..."
 				rows="1"
-				oninput="this.parentNode.dataset.value = this.value"
+				class="py-1 w-full text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none appearance-none bg-none"
 			/>
-		</div>
-		<div class="pt-1 flex flex-col w-1/2 text-sm">
+			<button
+				id="ask"
+				class="my-4 py-2 px-4 h-8 inline-flex items-center justify-center font-medium text-sm bg-red-400/80 hover:bg-red-400/60 transition-colors disabled:pointer-events-none disabled:opacity-50"
+			>Ask</button>
+		</form>
+		<div id="ask-output-container" class="pt-1 flex flex-col w-1/2 text-sm">
 			[output here]
 		</div>
 	</div>
 </Main>
+
+<script>
+	const askButton = document.getElementById('ask');
+	const input = document.getElementById('ask-textarea') as HTMLTextAreaElement | null;
+	const outputContainer = document.getElementById('ask-output-container');
+
+	if (askButton && input && outputContainer) {
+		askButton.addEventListener('click', e => {
+			e.preventDefault()
+			if (input.value) {
+				fetch('/ask', {
+					method: 'POST',
+					// headers: {
+					// 	'Content-Type': 'application/json'
+					// },
+					body: JSON.stringify({ question: input.value })
+				})
+					.then(response => response.json())
+					.then(data => {
+						outputContainer.innerHTML += data.answer;
+						input.value = '';
+					})
+					.catch(error => {
+						outputContainer.innerHTML += error;
+						input.value = '';
+					});
+			}
+		});
+	}
+
+	// handle textarea auto-vertical-resize
+	if (input) {
+		input.addEventListener('input', function () {
+			input.style.height = 'auto';
+			input.style.height = `${input.scrollHeight}px`
+		});
+	}
+</script>
