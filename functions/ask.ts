@@ -5,7 +5,7 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  console.log(context.request.body)
+  console.log(JSON.stringify(context.request.body, null, 2))
   const ai = new Ai(context.env.AI);
 
   // const input = { prompt: "What is the origin of the phrase Hello, World" }
