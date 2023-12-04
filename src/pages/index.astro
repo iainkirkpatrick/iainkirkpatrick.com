@@ -35,9 +35,9 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 			if (input.value) {
 				fetch('/ask', {
 					method: 'POST',
-					// headers: {
-					// 	'Content-Type': 'application/json'
-					// },
+					headers: {
+						'Content-Type': 'application/json'
+					},
 					body: JSON.stringify({ question: input.value })
 				})
 					.then(response => response.json())
