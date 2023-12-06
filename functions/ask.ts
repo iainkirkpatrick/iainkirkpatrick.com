@@ -1,20 +1,18 @@
 import { Ai } from '@cloudflare/ai'
+import types from '@cloudflare/workers-types'
 
-interface Env {
-  AI: any;
-}
-
-// export const onRequest: PagesFunction<Env> = async (context) => {
 export async function onRequestPost (context) {
-  const data = await context.request.json()
-  // console.log('logging:', JSON.stringify(context.request, null, 2))
-  console.log({ data })
-  const ai = new Ai(context.env.AI);
+  try {
+    const data = await context.request.json()
+    const ai = new Ai(context.env.AI);
 
-  const input = { prompt: "What is the origin of the phrase Hello, World" }
-  // const input = { prompt: context.request.body.question }
+    // const input = { prompt: "What is the origin of the phrase Hello, World" }
+    const input = { prompt: data.question }
 
-  const answer = await ai.run('@cf/meta/llama-2-7b-chat-int8', input)
+    const answer = await ai.run('@cf/meta/llama-2-7b-chat-int8', input)
 
-  return Response.json(answer);
+    return Response.json(answer);
+  } catch (error) {
+    return new Response(error.message || error.toString(), { status: 500 });
+  }
 }
