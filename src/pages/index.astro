@@ -4,7 +4,7 @@ import Main from "../layouts/main.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 ---
 <Main title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<div class="mt-12 flex w-full gap-12">
+	<div class="mt-12 flex flex-col w-full">
 		<form class="flex flex-col items-start w-1/2">
 			<textarea
 				id="ask-textarea"
@@ -19,7 +19,11 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 				</span>
 			</button>
 		</form>
-		<div id="ask-output-container" class="pt-1 flex flex-col w-1/2 text-sm" />
+		</div>
+		<div class="my-6 flex w-full gap-12">
+			<div id="ask-prev-inputs-container" class="flex flex-col w-1/2" />
+			<div id="ask-output-container" class="flex flex-col w-1/2 text-sm" />
+		</div>
 	</div>
 </Main>
 
@@ -33,7 +37,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 			e.preventDefault()
 			if (input.value && input.disabled === false) {
 				input.disabled = true;
-				fetch('/ask', {
+				fetch(`/ask`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -47,7 +51,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 							const char = answer[i];
 							setTimeout(() => {
 								outputContainer.innerHTML += char;
-							}, 50 * i);
+							}, 30 * i);
 						}
 						input.value = '';
 						input.disabled = false;
