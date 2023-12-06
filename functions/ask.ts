@@ -6,7 +6,7 @@ interface Env {
 
 // export const onRequest: PagesFunction<Env> = async (context) => {
 export async function onRequestPost (context) {
-  const data = await context.request.formData()
+  const data = await context.request.json()
   // console.log('logging:', JSON.stringify(context.request, null, 2))
   console.log({ data })
   const ai = new Ai(context.env.AI);
