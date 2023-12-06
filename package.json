@@ -6,7 +6,8 @@
     "dev": "astro dev --port 3000",
     "functions": "bunx wrangler dev ./_worker.js --remote",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && bun run build-worker",
+    "build-worker": "bun build ./_worker.ts --outdir ./dist --external @cloudflare/ai",
     "preview": "astro preview",
     "astro": "astro"
   },
