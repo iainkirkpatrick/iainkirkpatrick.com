@@ -1,7 +1,11 @@
 import { Ai } from '@cloudflare/ai'
 
+interface Env {
+  AI: any
+}
+
 export default {
-	async fetch(request, env) {
+	async fetch(request: Request, env: Env) {
 		const url = new URL(request.url)
 		const path = url.pathname
 
@@ -14,7 +18,7 @@ export default {
 				console.log({ answer })
 
 				return Response.json(answer);
-			} catch (error) {
+			} catch (error: any) {
     		return new Response(error.message || error.toString(), { status: 500 });
 			}
 		} else {
