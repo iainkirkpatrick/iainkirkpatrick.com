@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231121.0",
+    "@tailwindcss/typography": "^0.5.10",
     "wrangler": "^3.18.0"
   }
 }
