@@ -1,5 +1,5 @@
 import { Ai } from '@cloudflare/ai'
-import { EventContext } from '@cloudflare/workers-types'
+import type { EventContext } from '@cloudflare/workers-types'
 
 interface Env {
   AI: any
@@ -13,7 +13,7 @@ export async function onRequestPost (context: EventContext<Env, '', {}>) {
     const answer = await ai.run('@cf/meta/llama-2-7b-chat-int8', input)
 
     return Response.json(answer);
-  } catch (error) {
+  } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 });
   }
 }
