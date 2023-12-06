@@ -31,7 +31,8 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 	if (askButton && input && outputContainer) {
 		askButton.addEventListener('click', e => {
 			e.preventDefault()
-			if (input.value) {
+			if (input.value && input.disabled === false) {
+				input.disabled = true;
 				fetch('/ask', {
 					method: 'POST',
 					headers: {
@@ -40,13 +41,21 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 					body: JSON.stringify({ prompt: input.value })
 				})
 					.then(response => response.json())
-					.then(data => {
-						outputContainer.innerHTML += ` ${data.answer}`;
+					.then(({ answer }: { answer: string }) => {
+						outputContainer.innerHTML += ' ';
+						for (let i = 0; i < answer.length; i++) {
+							const char = answer[i];
+							setTimeout(() => {
+								outputContainer.innerHTML += char;
+							}, 50 * i);
+						}
 						input.value = '';
+						input.disabled = false;
 					})
 					.catch(error => {
 						outputContainer.innerHTML += error;
 						input.value = '';
+						input.disabled = false;
 					});
 			}
 		});
