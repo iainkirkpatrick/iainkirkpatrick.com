@@ -42,6 +42,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 				})
 					.then(response => response.json())
 					.then(data => {
+						console.log({ data })
 						outputContainer.innerHTML += data.answer;
 						input.value = '';
 					})
