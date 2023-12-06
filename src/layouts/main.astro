@@ -1,7 +1,6 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Navbar from '../components/Navbar.astro';
-
 interface Props {
 	title: string;
 	description: string;
@@ -22,3 +21,9 @@ const { title, description } = Astro.props;
 		</div>
 	</body>
 </html>
+
+<!-- add HTMX to all pages using main layout -->
+<script>
+	import htmx from 'htmx.org';
+	window.htmx = htmx;
+</script>
