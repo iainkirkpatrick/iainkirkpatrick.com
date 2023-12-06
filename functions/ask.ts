@@ -12,7 +12,7 @@ export async function onRequestPost (context: EventContext<Env, '', {}>) {
 
     const answer = await ai.run('@cf/meta/llama-2-7b-chat-int8', input)
 
-    return Response.json(answer);
+    return Response.json({ answer });
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 });
   }
