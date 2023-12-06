@@ -4,8 +4,9 @@ interface Env {
   AI: any;
 }
 
-export const onRequest: PagesFunction<Env> = async (context) => {
-  console.log('logging:', JSON.stringify(context, null, 2))
+// export const onRequest: PagesFunction<Env> = async (context) => {
+export async function onRequestPost (context) {
+  console.log('logging:', JSON.stringify(context.request, null, 2))
   const ai = new Ai(context.env.AI);
 
   const input = { prompt: "What is the origin of the phrase Hello, World" }
