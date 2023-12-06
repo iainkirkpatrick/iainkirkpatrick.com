@@ -38,7 +38,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ question: input.value })
+					body: JSON.stringify({ prompt: input.value })
 				})
 					.then(response => response.json())
 					.then(data => {
