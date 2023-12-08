@@ -8,6 +8,7 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example.com',
+  mode: 'directory',
   integrations: [mdx(), sitemap(), tailwind()],
   output: "hybrid",
   adapter: cloudflare()
