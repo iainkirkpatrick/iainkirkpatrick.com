@@ -10,6 +10,8 @@ if (Astro.request.method !== "POST") {
 const formData = await Astro.request.formData()
 const prompt = formData.get('prompt')
 
+console.log('URL', process.env.CF_PAGES_URL)
+
 const answer = await fetch(`${process.env.CF_PAGES_URL}/ask`, {
 	method: 'POST',
 	headers: {
