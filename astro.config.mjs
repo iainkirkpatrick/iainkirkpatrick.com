@@ -11,6 +11,11 @@ export default defineConfig({
   integrations: [mdx(), sitemap(), tailwind()],
   output: "hybrid",
   adapter: cloudflare({
-    mode: 'directory'
+    mode: 'directory',
+    routes: {
+      include: [
+        '/ask'
+      ]
+    }
   })
 });
