@@ -5,67 +5,63 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 ---
 <Main title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<div class="mt-12 flex flex-col w-full">
-		<form class="flex flex-col items-start w-1/2">
+		<form
+			id="ask-form"
+		  class="flex flex-col items-start w-1/2"
+		>
 			<textarea
 				id="ask-textarea"
+				name="prompt"
 				required
 				placeholder="Ask a question about Iain, his thoughts, projects..."
 				rows="1"
 				class="py-1 w-full text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none appearance-none bg-none"
 			/>
-			<button id="ask" class="group pt-2 font-medium text-sm transition-colors duration-100 ease-linear focus-visible:outline-none focus-visible:shadow-bottom-ring hover:text-red-500/80 disabled:pointer-events-none disabled:opacity-50">
+			<button
+			  id="ask-button"
+				class="relative group pt-2 font-medium text-sm transition-colors duration-100 ease-linear focus-visible:outline-none focus-visible:shadow-bottom-ring hover:text-red-500/80 disabled:pointer-events-none disabled:text-gray-400/80"
+				hx-post="/partials/ask"
+				hx-trigger="click"
+				hx-target="#output-container"
+				hx-swap="afterbegin"
+				hx-disabled-elt="this"
+				hx-on:htmx:after-request="document.getElementById('ask-form').reset(); this.classList.remove('htmx-request');"
+			>
 				submit
-				<span class="block h-[2px] w-0 bg-foreground transition-all duration-200 group-hover:w-full group-hover:bg-red-500/80">
+				<span id="ask-button-underline" class="block h-[2px] w-0 bg-foreground transition-all duration-200 group-hover:w-full group-hover:bg-red-500/80">
+				</span>
+				<span class="htmx-indicator absolute block h-[2px] w-0 bg-foreground animate-[expandContract_0.5s_ease-in-out_infinite] bg-red-500/80">
 				</span>
 			</button>
 		</form>
-		</div>
-		<div class="my-6 flex w-full gap-12">
-			<div id="ask-prev-inputs-container" class="flex flex-col w-1/2" />
-			<div id="ask-output-container" class="flex flex-col w-1/2 text-sm" />
-		</div>
+		<div id="output-container" class="flex flex-col w-full" />
 	</div>
 </Main>
 
-<script>
-	const askButton = document.getElementById('ask');
-	const input = document.getElementById('ask-textarea') as HTMLTextAreaElement | null;
-	const outputContainer = document.getElementById('ask-output-container');
-
-	if (askButton && input && outputContainer) {
-		askButton.addEventListener('click', e => {
-			e.preventDefault()
-			if (input.value && input.disabled === false) {
-				input.disabled = true;
-				fetch(`/ask`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ prompt: input.value })
-				})
-					.then(response => response.json())
-					.then(({ answer }: { answer: string }) => {
-						outputContainer.innerHTML += ' ';
-						for (let i = 0; i < answer.length; i++) {
-							const char = answer[i];
-							setTimeout(() => {
-								outputContainer.innerHTML += char;
-							}, 30 * i);
-						}
-						input.value = '';
-						input.disabled = false;
-					})
-					.catch(error => {
-						outputContainer.innerHTML += error;
-						input.value = '';
-						input.disabled = false;
-					});
-			}
-		});
+<style>
+	.htmx-request > #ask-button-underline {
+		display: none;
 	}
 
+	@keyframes expandContract {
+		0%, 100% {
+			width: 0%;
+			left: 0;
+		}
+		50% {
+			width: 100%;
+			left: 0;
+		}
+		75% {
+			width: 0%;
+			left: 100%;
+		}
+	}
+</style>
+
+<script>
 	// handle textarea auto-vertical-resize
+	const input = document.getElementById('ask-textarea') as HTMLTextAreaElement | null;
 	if (input) {
 		input.addEventListener('input', function () {
 			input.style.height = 'auto';

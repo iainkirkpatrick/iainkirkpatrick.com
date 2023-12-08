@@ -1,0 +1,43 @@
+---
+export const prerender = false;
+export const partial = true;
+
+// only able to use partial as a response to a POST
+if (Astro.request.method !== "POST") {
+  return Astro.redirect(null, 404);
+}
+
+const formData = await Astro.request.formData()
+const prompt = formData.get('prompt')
+
+const answer = await fetch(`/ask`, {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json'
+	},
+	body: JSON.stringify({ prompt })
+})
+	.then(response => response.json())
+	.then(({ answer }: { answer: string }) => {
+		return answer
+	})
+	.catch(error => {
+		console.log({ error })
+		return error
+	});
+
+---
+<div class="output my-6 flex w-full gap-12">
+	<div class="flex flex-col w-1/2">
+		<div class="font-bold mb-4">question:</div>
+		<div class="text-sm">
+			{prompt}
+		</div>
+	</div>
+	<div class="flex flex-col w-1/2 text-sm">
+		<div class="font-bold mb-4">answer:</div>
+		<div class="text-sm">
+			{answer}
+		</div>
+	</div>
+</div>
