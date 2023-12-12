@@ -60,6 +60,8 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 </style>
 
 <script>
+	console.log("CF_PAGES_URL", import.meta.env.CF_PAGES_URL)
+	console.log("PUBLIC_API_URL", import.meta.env.PUBLIC_API_URL)
 	// answer question
 	function afterAskRequest () {
 		const textarea = document.getElementById('ask-textarea') as HTMLTextAreaElement | null
