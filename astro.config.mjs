@@ -12,10 +12,10 @@ export default defineConfig({
   output: "hybrid",
   adapter: cloudflare({
     mode: 'advanced',
-    // routes: {
-    //   include: [
-    //     '/ask'
-    //   ]
-    // }
+    routes: {
+      include: [
+        '/ask'
+      ]
+    }
   })
 });
