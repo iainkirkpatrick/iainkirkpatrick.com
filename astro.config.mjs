@@ -11,12 +11,12 @@ export default defineConfig({
   integrations: [mdx(), sitemap(), tailwind()],
   output: "hybrid",
   adapter: cloudflare({
-    mode: 'advanced',
-    routes: {
-      include: [
-        '/ask',
-        '/partials/*',
-      ]
-    }
+    mode: 'directory',
+    // routes: {
+    //   include: [
+    //     '/ask',
+    //     '/partials/*',
+    //   ]
+    // }
   })
 });
