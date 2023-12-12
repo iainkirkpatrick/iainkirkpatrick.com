@@ -14,7 +14,8 @@ export default defineConfig({
     mode: 'advanced',
     routes: {
       include: [
-        '/ask'
+        '/ask',
+        '/partials/*',
       ]
     }
   })
