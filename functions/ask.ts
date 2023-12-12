@@ -9,6 +9,7 @@ export async function onRequestPost (context: EventContext<Env, '', {}>) {
   try {
     const input: { prompt: string } = await context.request.json()
     const ai = new Ai(context.env.AI);
+    console.log('ask function')
 
     const { response } = await ai.run('@cf/meta/llama-2-7b-chat-int8', input)
 
