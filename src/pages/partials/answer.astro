@@ -7,27 +7,9 @@ if (Astro.request.method !== "POST") {
   return Astro.redirect(null, 404);
 }
 
+// N.B. superseeded by using streaming SSE on browser instead
 const formData = await Astro.request.formData()
 const prompt = formData.get('prompt')
-
-console.log('URL', process.env.CF_PAGES_URL)
-
-const answer = await fetch(`${process.env.CF_PAGES_URL}/ask`, {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({ prompt })
-})
-	.then(response => response.json())
-	.then(({ answer }: { answer: string }) => {
-		return answer
-	})
-	.catch(error => {
-		console.log({ error })
-		return error
-	});
-
 ---
 <div class="py-4 flex w-full gap-12 border-t-2 border-black">
 	<div class="flex flex-col w-1/2">
@@ -36,10 +18,8 @@ const answer = await fetch(`${process.env.CF_PAGES_URL}/ask`, {
 			{prompt}
 		</p>
 	</div>
-	<div class="flex flex-col w-1/2">
+	<div class="flex flex-col w-1/2 text-sm">
 		<h4 class="font-bold mb-4">answer:</h4>
-		<p class="text-sm">
-			{answer}
-		</p>
+		<p class="text-sm" />
 	</div>
 </div>

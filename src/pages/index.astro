@@ -25,7 +25,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 				hx-target="#output-container"
 				hx-swap="afterbegin"
 				hx-disabled-elt="this"
-				hx-on:htmx:after-request="document.getElementById('ask-form').reset(); this.classList.remove('htmx-request');"
+				hx-on:htmx:after-request="afterAskRequest()"
 			>
 				submit
 				<span id="ask-button-underline" class="block h-[2px] w-0 bg-foreground transition-all duration-200 group-hover:w-full group-hover:bg-red-500/80">
@@ -60,6 +60,43 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 </style>
 
 <script>
+	// answer question
+	function afterAskRequest () {
+		const textarea = document.getElementById('ask-textarea') as HTMLTextAreaElement | null
+		const prompt = textarea?.value
+
+		// send prompt to function as query param of GET request
+		// N.B. this seems unconventional, but is how Cloudflare appears to suggest using streaming responses should be handled (see their own implementation at https://ai.cloudflare.com/)
+		const answerSource = new EventSource(`${import.meta.env.CF_PAGES_URL || import.meta.env.PUBLIC_API_URL}/ask?input=${prompt}`);
+		answerSource.onmessage = function (event) {
+			if (event.data === "[DONE]") {
+				answerSource.close();
+
+				const form = document.getElementById('ask-form') as HTMLFormElement | null
+				if (form) {
+					form.reset();
+				}
+				const button = document.getElementById('ask-button') as HTMLButtonElement | null
+				if (button) {
+					button.classList.remove('htmx-request');
+				}
+				
+				return;
+			} else {
+				const data = JSON.parse(event.data)
+				const newestAnswerElement = document.querySelector('#output-container > div:first-child > div:nth-child(2) > p');
+				if (newestAnswerElement) {
+					newestAnswerElement.innerHTML += data.response;
+				} else {
+					// TODO: handle if partial loading failed?
+				}
+			}
+		}
+	}
+	// @ts-ignore: global
+	window.afterAskRequest = afterAskRequest;
+	
+
 	// handle textarea auto-vertical-resize
 	const input = document.getElementById('ask-textarea') as HTMLTextAreaElement | null;
 	if (input) {
