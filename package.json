@@ -7,7 +7,6 @@
     "functions": "bunx wrangler dev ./_worker.ts --remote",
     "start": "astro dev",
     "build": "astro check && astro build",
-    "build-worker": "bun build ./_worker.ts --outdir ./dist --external @cloudflare/ai",
     "preview": "astro preview",
     "astro": "astro"
   },
