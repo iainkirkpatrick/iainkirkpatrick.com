@@ -10,12 +10,10 @@ interface Env {
 // also - a script locally to call this endpoint and generate embeddings for all the data at build time (should be able to use ids to avoid duplication)
 export async function onRequestPost (context: EventContext<Env, '', {}>) {
   try {
-    const { text }: { text: string | Array<string> } = await context.request.json()
+    const input: { text: string | Array<string> } = await context.request.json()
     const ai = new Ai(context.env.AI);
 		
-    const embeddings = await ai.run('@cf/baai/bge-base-en-v1.5', {
-			text
-		})
+    const embeddings = await ai.run('@cf/baai/bge-base-en-v1.5', input)
 
     return Response.json({ embeddings });
   } catch (error: any) {
