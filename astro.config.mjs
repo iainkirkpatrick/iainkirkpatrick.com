@@ -12,11 +12,11 @@ export default defineConfig({
   output: "hybrid",
   adapter: cloudflare({
     mode: 'directory',
-    // routes: {
-    //   include: [
-    //     '/ask',
-    //     '/partials/*',
-    //   ]
-    // }
+    routes: {
+      include: [
+        '/ask',
+        '/embed',
+      ]
+    }
   })
 });
