@@ -60,16 +60,18 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 </style>
 
 <script>
-	console.log("CF_PAGES_URL", import.meta.env.CF_PAGES_URL)
 	console.log("PUBLIC_API_URL", import.meta.env.PUBLIC_API_URL)
+	const origin = import.meta.env.PROD ? '' : import.meta.env.PUBLIC_API_URL
+	console.log({ origin })
 	// answer question
 	function afterAskRequest () {
 		const textarea = document.getElementById('ask-textarea') as HTMLTextAreaElement | null
 		const prompt = textarea?.value
 
+
 		// send prompt to function as query param of GET request
 		// N.B. this seems unconventional, but is how Cloudflare appears to suggest using streaming responses should be handled (see their own implementation at https://ai.cloudflare.com/)
-		const answerSource = new EventSource(`${import.meta.env.CF_PAGES_URL || import.meta.env.PUBLIC_API_URL}/ask?input=${prompt}`);
+		const answerSource = new EventSource(`${origin}/ask?input=${prompt}`);
 		answerSource.onmessage = function (event) {
 			if (event.data === "[DONE]") {
 				answerSource.close();
