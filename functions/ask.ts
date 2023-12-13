@@ -6,7 +6,7 @@ interface Env {
 }
 
 export async function onRequest (context: EventContext<Env, '', {}>) {
-  try {
+  // try {
   //   const input: { prompt: string } = await context.request.json()
   //   const ai = new Ai(context.env.AI);
 
