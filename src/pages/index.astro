@@ -60,14 +60,13 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 </style>
 
 <script>
-	console.log("PUBLIC_API_URL", import.meta.env.PUBLIC_API_URL)
-	const origin = import.meta.env.PROD ? '' : import.meta.env.PUBLIC_API_URL
-	console.log({ origin })
+	// use wrangler-given worker url in dev
+	const origin = import.meta.env.PROD ? '' : import.meta.env.PUBLIC_DEV_API_URL
+
 	// answer question
 	function afterAskRequest () {
 		const textarea = document.getElementById('ask-textarea') as HTMLTextAreaElement | null
 		const prompt = textarea?.value
-
 
 		// send prompt to function as query param of GET request
 		// N.B. this seems unconventional, but is how Cloudflare appears to suggest using streaming responses should be handled (see their own implementation at https://ai.cloudflare.com/)
@@ -99,7 +98,6 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 	}
 	// @ts-ignore: global
 	window.afterAskRequest = afterAskRequest;
-	
 
 	// handle textarea auto-vertical-resize
 	const input = document.getElementById('ask-textarea') as HTMLTextAreaElement | null;
