@@ -17,6 +17,7 @@ import { onRequestPost as embed } from '../functions/embed';
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		// handle CORS, see https://developers.cloudflare.com/workers/examples/cors-header-proxy/ and https://stackoverflow.com/questions/66486610/how-to-set-cors-in-cloudflare-workers
 		const corsHeaders = {
 			'Access-Control-Allow-Headers': '*',
 			'Access-Control-Allow-Methods': 'POST',
