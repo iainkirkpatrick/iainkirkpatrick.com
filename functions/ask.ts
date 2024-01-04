@@ -1,11 +1,10 @@
 import { Ai } from '@cloudflare/ai'
 import type { EventContext } from '@cloudflare/workers-types'
 
-interface Env {
-  AI: any
-}
+import type { Env } from '../src/types/env';
 
-export async function onRequest (context: EventContext<Env, '', {}>) {
+// headers are used in local dev for CORS
+export async function onRequest (context: EventContext<Env, '', {}>, headers?: any) {
   try {
     const ai = new Ai(context.env.AI);
     const { searchParams } = new URL(context.request.url)
@@ -19,10 +18,14 @@ export async function onRequest (context: EventContext<Env, '', {}>) {
         stream: true,
       })
 
-
       return new Response(
         response,
-        { headers: { "content-type": "text/event-stream" } }
+        {
+          headers: {
+            ...(headers || {}),
+            "content-type": "text/event-stream"
+          }
+        }
       );
     }
   } catch (error: any) {
