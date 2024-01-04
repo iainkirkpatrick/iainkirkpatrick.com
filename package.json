@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "concurrently \"astro dev --port 3000\" \"bun functions\"",
-    "functions": "bunx wrangler dev ./_worker.ts --remote",
+    "functions": "bunx wrangler dev --remote",
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
