@@ -52,3 +52,7 @@ compatibility_date = "2023-11-21"
 
 [ai]
 binding = "AI"
+
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "iainkirkpatrick"

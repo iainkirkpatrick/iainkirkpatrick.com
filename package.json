@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "embed": "bun ./scripts/embed.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",
