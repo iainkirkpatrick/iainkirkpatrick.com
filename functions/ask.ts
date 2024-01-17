@@ -13,7 +13,8 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
     if (!input) {
       throw new Error('No input provided')
     } else {
-      const response = await ai.run('@cf/meta/llama-2-7b-chat-int8', {
+      // TODO: consider feeding in the previous conversation context?
+      const response = await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', {
         prompt: input,
         stream: true,
       })
