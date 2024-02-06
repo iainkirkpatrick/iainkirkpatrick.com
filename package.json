@@ -9,6 +9,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "unit": "bunx vitest",
     "embed": "bun ./scripts/embed.ts"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
     "@cloudflare/workers-types": "^4.20231121.0",
     "@tailwindcss/typography": "^0.5.10",
     "concurrently": "^8.2.2",
+    "vitest": "^1.2.0",
     "wrangler": "^3.18.0"
   }
 }

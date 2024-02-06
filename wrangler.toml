@@ -56,3 +56,8 @@ binding = "AI"
 [[vectorize]]
 binding = "VECTORIZE_INDEX"
 index_name = "iainkirkpatrick"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "database"
+database_id = "a27bae71-c16f-43d0-99b3-23e8252d8197"
