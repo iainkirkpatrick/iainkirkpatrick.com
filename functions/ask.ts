@@ -13,6 +13,7 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
     if (!input) {
       throw new Error('No input provided')
     } else {
+      // TODO: embed their input, compare to all embeddings, retrieve matches that are above a certain threshold from the database, and add to prompt context
       // TODO: consider feeding in the previous conversation context?
       const response = await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', {
         prompt: input,
