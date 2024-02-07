@@ -11,8 +11,6 @@ if (Astro.request.method !== "POST") {
 const formData = await Astro.request.formData()
 const prompt = formData.get('prompt')
 
-console.log('executed')
-
 ---
 <div class="py-4 flex w-full gap-12 border-t-2 border-black">
 	<div class="flex flex-col w-1/2">
