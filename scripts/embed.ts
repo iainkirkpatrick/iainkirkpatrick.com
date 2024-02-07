@@ -1,6 +1,8 @@
 // A script to initialise RAG data - acts as a seed, in that each time we wipe data and start from scratch
 // Roughly follows sections of https://developers.cloudflare.com/workers-ai/tutorials/build-a-retrieval-augmented-generation-ai/#4-adding-embeddings-using-cloudflare-d1-and-vectorize
 // uses the REST API's to interact with D1 and Vectorize
+// see Willison's paragraph-level embeddings article for idea of embedding paragraphs from text https://til.simonwillison.net/llms/embed-paragraphs
+// TODO: import project descriptions and generate embeddings for them
 
 import fs from 'fs';
 import rehypeStringify from 'rehype-stringify'
@@ -12,11 +14,6 @@ import {unified} from 'unified'
 import { extractParagraphsFromHtmlString } from '../lib/extractParagraphsFromHtmlString';
 
 import initData from '../data/init.json';
-
-// TODO: import "about" and all thoughts, and generate embeddings for them
-// possibly similar to Willison's paragraph-level embeddings https://til.simonwillison.net/llms/embed-paragraphs
-// TODO: import project descriptions and generate embeddings for them
-
 
 async function embed () {
   try {
