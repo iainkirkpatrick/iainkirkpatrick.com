@@ -1,0 +1,81 @@
+---
+# N.B. thoughts are wrapped in a layout already in ...slug, so layouts here should be for thought-specific layouts.
+# layout: ../../layouts/main.astro
+title: "rebuilding"
+description: "Rebuilding my personal website."
+pubDate: 'Feb 08 2024'
+---
+<div class="mt-12 prose">
+
+	## rebuilding
+	<div class="-mt-4 mb-12 prose-sm">
+		_{frontmatter.pubDate}_
+	</div>
+
+	Hello! As it seems to be with a lot of developers, a personal site is one of those things that for me easily fell down the priority list. And as I'm sure is also common, a change in work circumstances presented a good opportunity for me to _rebuild_.
+
+	For this first post, I'm going to cover the approach and some of the technical details of the implementation of the new site. There's two main parts to break down - the home page using "AI" (an LLM with RAG), and the tech stack for the site itself.
+
+	### exploring LLM's
+
+	To start, I knew that I wanted the standard personal site sections:
+	- posts (which I'm calling "thoughts" to try and free myself from feeling like they need to be lengthy or well-edited),
+	- a previous projects page,
+	- and an about page with a short bio,
+
+	but I wanted the home page to be something more functional. LLM's were the hot tech topic in 2023, and though my anti-hype senses were triggered initially, I've been looking for small chances to _understand by building_. After reading a bunch, the idea arose - could I have even a relatively simple (and cheap) LLM, with context added about myself using RAG, on the home page as a way for visitors to ask questions about me and my content? Would that work, and would it actually be useful?
+
+	It turns out I was fortunate with my timing, and I've been able to lean a bunch on Cloudflare's recent product suite for the core infrastructure. They've also written a couple of good blog posts and tutorials on building with their AI products - this [instructional guide](https://developers.cloudflare.com/workers-ai/tutorials/build-a-retrieval-augmented-generation-ai) in particular works through example code for setting up a similar system. There are other providers of the core pieces needed, but they seem to be more expensive and less well-integrated compared to Cloudflare.
+
+	Those core pieces are:
+	- a **large language model (LLM)**, for text generation in response to prompts from the user
+	- a **text embedding model**, to encode any content of mine that I'd like to be available to the LLM as context when responding to user prompts
+	- a **vector database**, to store that encoded content that has been vectorized, and to query against those vectors for "closeness" to the user prompt (which gets similarly encoded)
+	- a **general database**, to store the original content, in order to retrieve it when it's vectorized version matches the user prompt, and add it to the context of the LLM.
+
+	Those last three parts together make up the technique known as **retrieval-augmented generation**, or **RAG**. I'll go over each piece in a more detail - if you're pretty familiar with these terms, you may want to skip to the implementation section. 
+
+	**LLM's** probably need the least introduction to anyone reading this - they have been the tech topic du jour for the last year or so, especially since ChatGPT was released by OpenAI and broke into the mainstream consciousness. I'm not going to try and explain any details about how LLM's work - there are [many](https://simonwillison.net/2023/Aug/3/weird-world-of-llms/) [good](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/) [resources](https://www.youtube.com/watch?v=zjkBMFhNj_g) on the web for that - for my purposes on this site, it's enough to say that there needs to be an instance of an LLM running somewhere, and there needs to be some way to send that LLM prompts and get back generated responses which in some way "answer" or continue sensibly from that prompt. The most obvious way to do this is to use one of OpenAI's models via API, but I was initially keen to try self-hosting with an open-source model, mostly for learning purposes. As it turns out, deploying and running an open-source LLM on a cloud provider's server can get quite expensive, unless you can use an on-demand pricing model. Cloudflare provides that kind of pricing with their [Workers AI](https://ai.cloudflare.com/) product, which includes a pretty roomy free tier, a few different LLM's to choose from, and an API to send prompts to and get back responses from. [AWS Bedrock](https://aws.amazon.com/bedrock/pricing/) would be another option (check out their "provisioned throughput" pricing for an example of cost that isn't on-demand!).
+
+	The first part of RAG is **text embeddings**, [described concisely by Simon Willison](https://simonwillison.net/2023/Oct/23/embeddings/) as "(taking) a piece of content... and turn(ing) that piece of content into an array of floating point numbers". It's a technique adjacent to LLM's, in that different specific "embeddings" models are used, but similarly to LLM's these models have some "understanding" of the text content they're encoding. The key usefulness of encoding text into these lists of numbers is that similar texts tend to be encoded into similar lists of numbers, and so you can compare those lists of numbers relatively easily (using algorithms - cosine similarity seems to be most popular), which in turn results in a comparison of the "semantic" similarity of the texts. Again, for my purposes here, Cloudflare provides open-source text embeddings models via Workers AI that I can use to encode my content, and then compare those encodings to an on-the-fly encoding of a user prompt, in order to find the most relevant content to add to the context of the LLM before it tries to answer.
+
+	Secondly for RAG, the arrays of numbers generated by the embeddings model are "vectors", and they can more easily be compared to a vector of the user prompt if they are stored in a **vector database**. Vector databases were another related hot topic in tech in 2023, as companies rushed to provide a way to store and query these vectors efficiently - either by new offerings like [Pinecone](https://pinecone.io) or extensions to existing databases like [Postgres](https://github.com/pgvector/pgvector). Cloudflare's offering is called [Vectorize](https://vectorize.ai/), which as it's serverless has similar on-demand pricing to it's Workers AI product. Pre-generated vectors are able to be uploaded to Vectorize through it's API, and queries for similarity to a given vector can be made through the same API. For my purposes, I'm using Vectorize to store the vectors of my content, and then to query against those vectors for "closeness" to the vectorized version of the user prompt (using the embeddings model as described above).
+
+	Finally, the **general database** is just a plain SQL database used to store the original non-vectorized content. Each text string is given an id, and when that string is run through the embeddings model and the resulting vector stored in Vectorize, it's stored with the same id. That means when similar vectors to the vectorized user prompt are found, the site can request the matching original content by id, so that that content can be added to the context of the LLM. Cloudflare has a serverless SQLite database offering called [D1](https://www.cloudflare.com/developer-platform/d1/). It occurs to me that I might actually be able to avoid requiring a SQL database - instead, doing something like storing the name of the content as the id in Vectorize (the docs don't seem to suggest id's must be integers), and then just retrieving the content from the live site during inference. Something I might explore at a future date!
+
+	### implementing prompt -> response 
+
+	I'm not going to go over any code in detail - see the [repo](https://github.com/iainkirkpatrick/iainkirkpatrick.com), or the [Cloudflare article](https://developers.cloudflare.com/workers-ai/tutorials/build-a-retrieval-augmented-generation-ai) mentioned above for that - but here's a high-level overview of the implementation.
+	
+	The UI on the home page is simple, like ChatGPT - enter a prompt in the input, place that prompt underneath when the user clicks "submit", and wait for the response from the LLM to stream in beside it.
+
+	To use RAG though, there is a script that (currently!) must be run manually every time there is new content that I want to be included in the potential LLM context. I've written it a bit like a database seed script; it:
+	- clears the SQL database
+	- reads in all the relevant content I've written, including transforming MDX files into HTML so that the paragraphs can be extracted ([thanks Simon!](https://til.simonwillison.net/llms/embed-paragraphs))
+	- inserts all those paragraphs into the SQL database, returning the id's of each new row
+	- generates vectors using the embeddings model for each paragraph
+	- stores those vectors in the Vectorize database, using the ids from the SQL database as the ids.
+
+	Then, when a user enters a prompt on the home page and clicks "submit", my API:
+	- generates a vector for the prompt using the same embeddings model as my content
+	- performs a search against the Vectorize database for the most similar vectors to the prompt vector (with configuration around how many results to return, and a "similarity score" cutoff)
+	- if there are any similar vectors found, we then retrieve the original content of those vectors from the SQL database using each vector id
+	- finally, that original content is added as a system prompt to provide relevant context for the user prompt, and both are sent to the LLM to generate a response.
+
+	### the site itself
+
+	The rest of the site is more straightforward, regular web development, albeit with a few variations from my usual tools. My previous company had been settled for the past couple of years on a tech stack that was centered around Next.js with hosting on Vercel. I've enjoyed working with Next, but have been interested in building something real using [Astro](https://astro.build/) since seeing [Fred present at Feross' virtual meetup](https://www.youtube.com/watch?v=mgkwZqVkrwo). As useful and as much mindshare that React and other "reactive" frameworks have, it's nice to be reminded that the web is just HTML, CSS and JS, and that a often a lot of the content on a page is static (and even React is now moving in this direction with RSC's). Astro brings a lot of what I find useful in writing web pages from the Next ecosystem to an "HTML-first" approach - being able to write Typescript, structure the site as pages and components, and even include islands of React where necessary.
+
+	For the core prompt -> response interaction on the home page, I wanted a UX that didn't require refreshing the page, but I didn't want to bundle a framework like React just for a single form and response rendering. Of course, I could just add a sprinkle of plain JS, but again this was a chance to lean into using a library I'd been wanting to explore - [HTMX](https://htmx.org/). It's pretty great, even for the small part I'm using it for! I still need JS to handle receiving the streaming response from the API wrapped around the LLM, but I can see how HTMX makes a lot of the core web interactions feel pretty simple to manage, especially when combined with Astro and it's [HTML partials](https://docs.astro.build/en/basics/astro-pages/#page-partials) (or most other server-side rendering frameworks I guess!).
+
+	Less interesting parts to talk about: libraries like Tailwind for styling, Bun for bundling / running scripts, MDX for the content pages etc. I'm not using any analytics right now, but if I do I'll probably use something simple and privacy-respecting like Umami, or maybe Plausible.
+
+	### is it actually useful?
+
+	I'm not sure yet! But some things I've already noticed:
+	- Mistral 7B as a model is an amazing technical achievement, but it sure shows how advanced GPT-4 is - some simple questions repeatedly have odd, truncated responses, or obvious errors. Try asking "Who is Russell Westbrook?" for example!
+	- The more content I have to add as relevant context, the better - right now, there's just the About page and a few other quick "facts" I've added.
+	- It feels like I could get better results by tweaking system prompts - for example, the About page doesn't refer to me by name, and as a result it seems like the LLM doesn't understand that those strings refer to "me".
+	- current limits on how many requests per hour that Cloudflare allows, and potential risks with a public interface to an LLM (not dissimilar to Cloudflare themselves, and Vercel etc). Not expecting my site to be high-profile - but something to be aware of and may need to change.
+
+</div>
