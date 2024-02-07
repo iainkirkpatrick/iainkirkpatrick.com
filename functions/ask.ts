@@ -13,10 +13,37 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
     if (!input) {
       throw new Error('No input provided')
     } else {
-      // TODO: embed their input, compare to all embeddings, retrieve matches that are above a certain threshold from the database, and add to prompt context
+      // embed their input, compare to all embeddings, retrieve matches that are above a certain threshold from the database, and add to prompt context
+      const embeddings = await ai.run('@cf/baai/bge-base-en-v1.5', { text: input })
+      const vectors = embeddings.data[0]
+
+      const SIMILARITY_CUTOFF = 0.75
+      const vectorQuery = await context.env.VECTORIZE_INDEX.query(vectors, { topK: 5 });
+      const vecIds = vectorQuery.matches
+        .filter(v => v.score > SIMILARITY_CUTOFF)
+        .map(v => v.id)
+
+      let contextMessage = ""
+      if (vecIds.length > 0) {
+        const query = `SELECT * FROM texts WHERE id IN (${vecIds.join(", ")})`
+        const { results } = await context.env.DB.prepare(query).bind().all()
+        if (results) {
+          const matchedTexts = results.map(v => v.text)
+          contextMessage = matchedTexts.length
+            ? `Context:\n${matchedTexts.map(t => `- ${t}`).join("\n")}`
+            : ""
+        }
+      }
+
+      const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant.`
       // TODO: consider feeding in the previous conversation context?
       const response = await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', {
-        prompt: input,
+        // prompt: input,
+        messages: [
+          ...(contextMessage ? [{ role: 'system', content: contextMessage }] : []),
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: input },
+        ],
         stream: true,
       })
 
