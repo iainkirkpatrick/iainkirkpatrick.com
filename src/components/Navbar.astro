@@ -1,0 +1,24 @@
+---
+import NavLink from './NavLink.astro';
+
+import { SITE_TITLE } from '../constants';
+---
+
+<header class="flex w-full">
+	<nav class="py-8 px-12 flex w-full items-center justify-between">
+		<a class="transition-colors duration-100 ease-linear hover:text-red-500/80 focus-visible:outline-none focus-visible:shadow-bottom-ring" href="/">
+			<h2 class="font-semibold">{SITE_TITLE}</h2>
+		</a>
+		<ul class="flex gap-8">
+			<li>
+				<NavLink href="/thoughts">thoughts</NavLink>
+			</li>
+			<li>
+				<NavLink href="/projects">projects</NavLink>
+			</li>
+			<li>
+				<NavLink href="/about">about</NavLink>
+			</li>
+		</ul>
+	</nav>
+</header>
