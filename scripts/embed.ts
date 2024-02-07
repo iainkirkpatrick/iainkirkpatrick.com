@@ -2,10 +2,21 @@
 // Roughly follows sections of https://developers.cloudflare.com/workers-ai/tutorials/build-a-retrieval-augmented-generation-ai/#4-adding-embeddings-using-cloudflare-d1-and-vectorize
 // uses the REST API's to interact with D1 and Vectorize
 
+import fs from 'fs';
+import rehypeStringify from 'rehype-stringify'
+import remarkGfm from 'remark-gfm'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import {unified} from 'unified'
+
+import { extractParagraphsFromHtmlString } from '../lib/extractParagraphsFromHtmlString';
+
 import initData from '../data/init.json';
 
 // TODO: import "about" and all thoughts, and generate embeddings for them
 // possibly similar to Willison's paragraph-level embeddings https://til.simonwillison.net/llms/embed-paragraphs
+// TODO: import project descriptions and generate embeddings for them
+
 
 async function embed () {
   try {
@@ -26,8 +37,28 @@ async function embed () {
 			throw new Error('could not clear the database')
 		}
 
-		// add each init data to D1, to store and have an id reference
-		const dbInserts = await Promise.all(initData.init.map(d => {
+		// get paragraphs from mdx files
+		// TODO: loop over thoughts mdx files
+		const mdxFiles = [
+			'./src/pages/about.mdx',
+		]
+		// flatten afterwards
+		const mdxParagraphs = await Promise.all(mdxFiles.map(f => {
+			const mdxContent = fs.readFileSync(f, 'utf8');
+			return unified()
+			.use(remarkParse)
+			.use(remarkGfm)
+			.use(remarkRehype)
+			.use(rehypeStringify)
+			.process(mdxContent)
+			.then(file => extractParagraphsFromHtmlString(file.value.toString()))
+		})).then(paragraphs => paragraphs.flat())
+
+		// add each of the init data and the mdx paragraphs to D1, to store and have an id reference
+		const dbInserts = await Promise.all([
+			...initData.init,
+			...mdxParagraphs
+		].map(d => {
 			return fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLF_ACCOUNT_ID}/d1/database/${process.env.CLF_DB_ID}/query`, {
 				method: 'POST',
 				headers: {
