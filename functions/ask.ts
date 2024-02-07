@@ -20,17 +20,17 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
       const SIMILARITY_CUTOFF = 0.75
       const vectorQuery = await context.env.VECTORIZE_INDEX.query(vectors, { topK: 5 });
       const vecIds = vectorQuery.matches
-        .filter(v => v.score > SIMILARITY_CUTOFF)
-        .map(v => v.id)
+        .filter((v: any) => v.score > SIMILARITY_CUTOFF)
+        .map((v: any) => v.id)
 
       let contextMessage = ""
       if (vecIds.length > 0) {
         const query = `SELECT * FROM texts WHERE id IN (${vecIds.join(", ")})`
         const { results } = await context.env.DB.prepare(query).bind().all()
         if (results) {
-          const matchedTexts = results.map(v => v.text)
+          const matchedTexts = results.map((v: any) => v.text)
           contextMessage = matchedTexts.length
-            ? `Context:\n${matchedTexts.map(t => `- ${t}`).join("\n")}`
+            ? `Context:\n${matchedTexts.map((t: any) => `- ${t}`).join("\n")}`
             : ""
         }
       }
