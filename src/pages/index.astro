@@ -60,8 +60,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 </style>
 
 <script>
-	// use wrangler-given worker url in dev
-	const origin = import.meta.env.PROD ? '' : import.meta.env.PUBLIC_DEV_API_URL
+	const origin = import.meta.env.PUBLIC_API_URL
 
 	// answer question
 	function afterAskRequest () {

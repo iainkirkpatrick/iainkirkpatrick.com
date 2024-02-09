@@ -15,7 +15,7 @@ import { extractParagraphsFromHtmlString } from '../lib/extractParagraphsFromHtm
 
 import initData from '../data/init.json';
 
-async function embed () {
+async function initRAG () {
   try {
 		// clear D1
 		const clearResult = await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLF_ACCOUNT_ID}/d1/database/${process.env.CLF_DB_ID}/query`, {
@@ -118,4 +118,4 @@ async function embed () {
   }
 }
 
-embed()
+initRAG()
