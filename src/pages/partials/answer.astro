@@ -12,15 +12,15 @@ const formData = await Astro.request.formData()
 const prompt = formData.get('prompt')
 
 ---
-<div class="py-4 flex w-full gap-12 border-t-2 border-black">
-	<div class="flex flex-col w-1/2">
-		<h4 class="font-bold mb-4">question:</h4>
-		<p class="text-sm">
+<div class="py-4 flex flex-col md:flex-row w-full gap-6 md:gap-12 border-t-2 border-black">
+	<div class="flex flex-col w-full md:w-1/2">
+		<h4 class="font-bold mb-2 md:mb-4">question:</h4>
+		<p class="text-sm italic">
 			{prompt}
 		</p>
 	</div>
-	<div class="flex flex-col w-1/2 text-sm">
-		<h4 class="font-bold mb-4">answer:</h4>
+	<div class="flex flex-col w-full md:w-1/2">
+		<h4 class="font-bold mb-2 md:mb-4">answer:</h4>
 		<p class="text-sm" />
 	</div>
 </div>
