@@ -3,8 +3,6 @@ import type { EventContext } from '@cloudflare/workers-types'
 
 import type { Env } from '../src/types/env';
 
-const MODEL = '@cf/meta/llama-3-8b-instruct'
-
 // headers are used in local dev for CORS
 export async function onRequest (context: EventContext<Env, '', {}>, headers?: any) {
   try {
@@ -41,7 +39,8 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
 
       const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant.`
       // TODO: consider feeding in the previous conversation context?
-      const response = await ai.run(MODEL, {
+      // @ts-ignore: TODO why is this model not in the types?
+      const response = await ai.run('@cf/meta/llama-3-8b-instruct', {
         // prompt: input,
         messages: [
           ...(contextMessage ? [{ role: 'system', content: contextMessage }] : []),
@@ -52,6 +51,7 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
       })
 
       return new Response(
+        // @ts-ignore: TODO fix response type
         response,
         {
           headers: {
