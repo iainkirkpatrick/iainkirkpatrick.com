@@ -3,6 +3,8 @@ import type { EventContext } from '@cloudflare/workers-types'
 
 import type { Env } from '../src/types/env';
 
+const MODEL = '@cf/meta/llama-3-8b-instruct'
+
 // headers are used in local dev for CORS
 export async function onRequest (context: EventContext<Env, '', {}>, headers?: any) {
   try {
@@ -39,7 +41,7 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
 
       const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant.`
       // TODO: consider feeding in the previous conversation context?
-      const response = await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', {
+      const response = await ai.run(MODEL, {
         // prompt: input,
         messages: [
           ...(contextMessage ? [{ role: 'system', content: contextMessage }] : []),
