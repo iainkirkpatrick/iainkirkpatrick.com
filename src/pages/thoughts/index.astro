@@ -16,9 +16,9 @@ const posts = (await getCollection('thoughts')).sort(
 			<ul>
 				{
 					posts.map((post) => (
-						<li>
+						<li class="group">
 							<a href={`/thoughts/${post.slug}/`}>
-								<h4 class="font-semibold">{post.data.title}</h4>
+								<h4 class="font-semibold group-hover:underline">{post.data.title}</h4>
 								<p class="">
 									<FormattedDate date={post.data.pubDate} />
 								</p>
