@@ -1,4 +1,4 @@
-import { Ai } from '@cloudflare/ai'
+// import { Ai } from '@cloudflare/ai'
 import type { EventContext } from '@cloudflare/workers-types'
 
 import type { Env } from '../src/types/env';
@@ -6,7 +6,7 @@ import type { Env } from '../src/types/env';
 // headers are used in local dev for CORS
 export async function onRequest (context: EventContext<Env, '', {}>, headers?: any) {
   try {
-    const ai = new Ai(context.env.AI);
+    // const ai = new Ai(context.env.AI);
     const { searchParams } = new URL(context.request.url)
     const input = searchParams.get('input')
 
@@ -14,7 +14,7 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
       throw new Error('No input provided')
     } else {
       // embed their input, compare to all embeddings, retrieve matches that are above a certain threshold from the database, and add to prompt context
-      const embeddings = await ai.run('@cf/baai/bge-base-en-v1.5', { text: input })
+      const embeddings = await context.env.AI.run('@cf/baai/bge-base-en-v1.5', { text: input })
       const vectors = embeddings.data[0]
 
       console.log('env', context.env)
@@ -37,17 +37,19 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
         }
       }
 
-      const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant. If the question refers to Iain, use the context to answer it.`
+      const systemPrompt = `When answering the question or responding, use any following context provided, if it is provided and relevant. If the question refers to Iain, use any following context to answer it.`
       // TODO: consider feeding in the previous conversation context?
-      // @ts-ignore: TODO why is this model not in the types?
-      const response = await ai.run('@cf/meta/llama-3-8b-instruct', {
-        // prompt: input,
+      const response = await context.env.AI.run('@cf/meta/llama-3-8b-instruct', {
         messages: [
-          ...(contextMessage ? [{ role: 'system', content: contextMessage }] : []),
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: `${systemPrompt}\n\n${contextMessage}` },
           { role: 'user', content: input },
         ],
-        stream: true,
+        stream: true
+      }, {
+        gateway: {
+          id: context.env.CLF_AI_GATEWAY_ID,
+          cache: 60000
+        }
       })
 
       return new Response(
