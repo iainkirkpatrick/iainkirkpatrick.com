@@ -17,8 +17,6 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
       const embeddings = await context.env.AI.run('@cf/baai/bge-base-en-v1.5', { text: input })
       const vectors = embeddings.data[0]
 
-      console.log('env', context.env)
-
       const SIMILARITY_CUTOFF = 0.75
       const vectorQuery = await context.env.VECTORIZE_INDEX.query(vectors, { topK: 5 });
       const vecIds = vectorQuery.matches
