@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "unit": "bunx vitest",
-    "embed": "bun ./scripts/embed.ts"
+    "init": "bun ./scripts/init-RAG.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",

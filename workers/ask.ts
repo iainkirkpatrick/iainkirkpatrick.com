@@ -37,7 +37,7 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
         }
       }
 
-      const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant.`
+      const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant. If the question refers to Iain, use the context to answer it.`
       // TODO: consider feeding in the previous conversation context?
       // @ts-ignore: TODO why is this model not in the types?
       const response = await ai.run('@cf/meta/llama-3-8b-instruct', {
