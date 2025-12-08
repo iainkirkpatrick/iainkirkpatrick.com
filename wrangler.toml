@@ -10,9 +10,9 @@ CLF_AI_GATEWAY_ID = "iainkirkpatrick-ai-gateway"
 
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[[kv_namespaces]]
+binding = "SESSION"
+id = "1c60017fb48942109a665ce8b60e8023"
 
 # Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
 # Docs: https://developers.cloudflare.com/r2/api/workers/workers-api-usage/
@@ -61,3 +61,25 @@ index_name = "iainkirkpatrick"
 binding = "DB"
 database_name = "database"
 database_id = "a27bae71-c16f-43d0-99b3-23e8252d8197"
+
+[env.staging]
+name = "iainkirkpatrick-dot-com-workers-staging"
+
+[env.staging.vars]
+CLF_AI_GATEWAY_ID = "iainkirkpatrick-ai-gateway"
+
+[env.staging.ai]
+binding = "AI"
+
+[[env.staging.vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "iainkirkpatrick-staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "iainkirkpatrick-db-staging"
+database_id = "cc5e6e72-5ef2-4539-8956-5a6ce447e7b8"
+
+[[env.staging.kv_namespaces]]
+binding = "SESSION"
+id = "2fa433a6690d449fa19d03b3c1098092"

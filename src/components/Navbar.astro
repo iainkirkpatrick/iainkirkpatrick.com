@@ -5,11 +5,12 @@ import { SITE_TITLE } from '../constants';
 ---
 
 <header class="flex w-full">
-	<nav class="py-8 px-6 md:px-12 flex flex-col md:flex-row w-full items-start md:items-center justify-between">
-		<a class="transition-colors duration-100 ease-linear hover:text-red-500/80 focus-visible:outline-none focus-visible:shadow-bottom-ring" href="/">
+	<nav class="py-8 px-6 md:px-12 flex flex-row w-full items-center justify-between">
+		<a class="group transition-colors duration-100 ease-linear focus-visible:outline-none focus-visible:shadow-bottom-ring" href="/">
 			<h2 class="font-semibold">{SITE_TITLE}</h2>
+			<span class="block h-[2px] w-0 bg-foreground transition-all duration-200 group-hover:w-full group-hover:bg-red-500/80"></span>
 		</a>
-		<ul class="flex gap-8 mt-2 md:mt-0">
+		<ul class="flex gap-4 md:gap-8 mt-0">
 			<li>
 				<NavLink href="/thoughts">thoughts</NavLink>
 			</li>

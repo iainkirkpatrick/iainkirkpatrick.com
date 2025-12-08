@@ -9,7 +9,7 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   site: 'https://iainkirkpatrick.com',
   integrations: [mdx(), sitemap(), tailwind()],
-  output: "hybrid",
+  output: "server",
   adapter: cloudflare({
     mode: 'directory',
     routes: {
@@ -17,6 +17,9 @@ export default defineConfig({
         '/ask',
         '/embed',
       ]
+    },
+    sessions: {
+      enabled: false,
     }
   })
 });
