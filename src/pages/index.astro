@@ -7,13 +7,13 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 	<div class="mt-12 flex flex-col w-full">
 		<form
 			id="ask-form"
-		  class="flex flex-col items-start w-1/2"
+		    class="flex flex-col items-start w-full md:w-1/2"
 		>
 			<textarea
 				id="ask-textarea"
 				name="prompt"
 				required
-				placeholder="Ask a question about Iain, his thoughts, projects... or anything else!"
+				placeholder="What do you want to know about me?"
 				rows="1"
 				class="py-1 w-full text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none appearance-none bg-none"
 			/>
@@ -60,7 +60,8 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 </style>
 
 <script>
-	const origin = import.meta.env.PUBLIC_API_URL
+	const configuredOrigin = import.meta.env.PUBLIC_API_URL
+	const origin = configuredOrigin && configuredOrigin.length ? configuredOrigin : window.location.origin
 
 	// answer question
 	function afterAskRequest () {
@@ -69,7 +70,8 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 
 		// send prompt to function as query param of GET request
 		// N.B. this seems unconventional, but is how Cloudflare appears to suggest using streaming responses should be handled (see their own implementation at https://ai.cloudflare.com/)
-		const answerSource = new EventSource(`${origin}/ask?input=${prompt}`);
+		const encodedPrompt = encodeURIComponent(prompt || '');
+		const answerSource = new EventSource(`${origin}/ask?input=${encodedPrompt}`);
 		answerSource.onmessage = function (event) {
 			if (event.data === "[DONE]") {
 				answerSource.close();
@@ -82,7 +84,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 				if (button) {
 					button.classList.remove('htmx-request');
 				}
-				
+
 				return;
 			} else {
 				const data = JSON.parse(event.data)

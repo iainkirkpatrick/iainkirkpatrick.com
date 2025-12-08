@@ -20,5 +20,8 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# local planning notes
+plans/
+
 .wrangler
 functions/*.js
