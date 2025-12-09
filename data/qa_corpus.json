@@ -1,9 +1,34 @@
 {
   "entries": [
     {
-      "id": "qa-what-is-your-name",
-      "question": "What is your name?",
-      "answer": "I'm Iain Kirkpatrick."
+      "id": "qa-who-is-iain",
+      "question": "Who is Iain Kirkpatrick?",
+      "answer": "Iain Kirkpatrick is a software engineer and technical leader from New Zealand who now lives in Canberra, Australia. He previously co-founded Root Systems and served as a director, tech lead, and engineer at Bamboo Creative."
+    },
+    {
+      "id": "qa-what-does-iain-work-on",
+      "question": "What kind of work does Iain focus on?",
+      "answer": "Iain focuses on software engineering and product development, often leading small, multi-disciplinary teams to ship thoughtful experiences for the web."
+    },
+    {
+      "id": "qa-where-did-iain-train",
+      "question": "Where did Iain train as a developer?",
+      "answer": "Iain attended Dev Academy in Wellington, New Zealand in 2015, retraining from a GIS and cartography background into software development."
+    },
+    {
+      "id": "qa-where-has-iain-lived",
+      "question": "Where has Iain lived?",
+      "answer": "Iain was born in Christchurch, New Zealand, spent many years working in Wellington, and currently lives in Canberra, Australia while collaborating remotely across time zones."
+    },
+    {
+      "id": "qa-what-is-this-site-built-with",
+      "question": "What is this site built with?",
+      "answer": "The site runs on Astro with Tailwind CSS for styling, and the AI interactions are powered by Cloudflare Workers, Workers AI, and Vectorize."
+    },
+    {
+      "id": "qa-what-is-iain-reading",
+      "question": "What is Iain currently learning or reading?",
+      "answer": "He is working through Thorsten Ball's books on writing an interpreter and compiler in Go as a way to deepen his understanding of language tooling."
     }
   ]
 }

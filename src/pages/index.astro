@@ -88,11 +88,19 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 				return;
 			} else {
 				const data = JSON.parse(event.data)
-				const newestAnswerElement = document.querySelector('#output-container > div:first-child > div:nth-child(2) > p');
-				if (newestAnswerElement) {
-					newestAnswerElement.innerHTML += data.response;
-				} else {
-					// TODO: handle if partial loading failed?
+				const newestEntry = document.querySelector('#output-container > div:first-child');
+				const answerElement = newestEntry?.querySelector('.generated-answer') as HTMLParagraphElement | null
+				const referenceElement = newestEntry?.querySelector('.answer-reference') as HTMLParagraphElement | null
+
+				if (answerElement && typeof data.response === 'string') {
+					answerElement.innerHTML += data.response;
+				}
+
+				if (referenceElement && typeof data.reference === 'string' && !referenceElement.textContent.length) {
+					const confidenceSuffix = typeof data.confidence === 'number'
+						? ` (score ${(data.confidence * 100).toFixed(1)}%)`
+						: ''
+					referenceElement.textContent = `Matched question: ${data.reference}${confidenceSuffix}`
 				}
 			}
 		}

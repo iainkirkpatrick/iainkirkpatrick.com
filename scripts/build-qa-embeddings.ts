@@ -16,6 +16,9 @@ const OUTPUT_JSON = new URL('../data/qa_with_embeddings.json', import.meta.url);
 const OUTPUT_NDJSON = new URL('../data/qa_vectorize.ndjson', import.meta.url);
 const CORPUS_PATH = new URL('../data/qa_corpus.json', import.meta.url);
 
+const runtimeEnv = (process as { env: Record<string, string | undefined> }).env;
+const runtimeExit = (process as unknown as { exit: (code?: number) => never }).exit;
+
 async function loadCorpus(): Promise<CorpusFile> {
   const path = CORPUS_PATH;
   const content = await fs.readFile(path, 'utf-8');
@@ -23,7 +26,7 @@ async function loadCorpus(): Promise<CorpusFile> {
 }
 
 function ensureEnv(name: string): string {
-  const value = process.env[name];
+  const value = runtimeEnv[name];
   if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
@@ -102,5 +105,5 @@ async function main() {
 
 main().catch((error) => {
   console.error(error);
-  process.exit(1);
+  runtimeExit(1);
 });
