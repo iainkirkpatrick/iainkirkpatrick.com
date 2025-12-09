@@ -1,7 +1,7 @@
 [iainkirkpatrick.com](http://iainkirkpatrick.com)
 
 ### todo:
-- [ ] ai-generated thoughts images derived from the content?
+- [ ] ai-generated posts images derived from the content?
 - [ ] enrich `qa_corpus.json` with more projects + writing references
 
 ### development workflows
