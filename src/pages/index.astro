@@ -4,58 +4,63 @@ import Main from "../layouts/main.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 ---
 <Main title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<div class="mt-12 flex flex-col w-full">
+	<div class="mt-48 flex flex-col w-full">
 		<form
 			id="ask-form"
-		    class="flex flex-col items-start w-full md:w-1/2"
+			class="p-4 flex flex-col w-full bg-[#F8F9FB] rounded-lg shadow-[0_2px_6px_rgba(15,23,42,0.08)]"
 		>
-			<textarea
-				id="ask-textarea"
-				name="prompt"
-				required
-				placeholder="What do you want to know about me?"
-				rows="1"
-				class="py-1 w-full text-sm focus-visible:outline-none focus-visible:shadow-bottom-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none appearance-none bg-none"
-			/>
-			<button
-			  id="ask-button"
-				class="relative group pt-2 font-medium text-sm transition-colors duration-100 ease-linear focus-visible:outline-none focus-visible:shadow-bottom-ring hover:text-red-500/80 disabled:pointer-events-none disabled:text-gray-400/80"
-				hx-post="/partials/answer"
-				hx-trigger="click"
-				hx-target="#output-container"
-				hx-swap="afterbegin"
-				hx-disabled-elt="this"
-				hx-on:htmx:after-request="afterAskRequest()"
-			>
-				submit
-				<span id="ask-button-underline" class="block h-[2px] w-0 bg-foreground transition-all duration-200 group-hover:w-full group-hover:bg-red-500/80">
-				</span>
-				<span class="htmx-indicator absolute block h-[2px] w-0 bg-foreground animate-[expandContract_0.5s_ease-in-out_infinite] bg-red-500/80">
-				</span>
-			</button>
+			<div class="relative flex w-full items-start gap-3 bg-white/5 px-4 py-3 backdrop-blur transition focus-within:bg-white/10">
+				<textarea
+					id="ask-textarea"
+					name="prompt"
+					required
+					placeholder="Ask anything... (about Iain)"
+					rows="1"
+					spellcheck="false"
+					autocomplete="off"
+					data-gramm="false"
+					class="max-h-48 w-full flex-1 resize-none bg-transparent text-base text-foreground/90 placeholder:text-foreground/50 focus:outline-none"
+				/>
+				<button
+					type="submit"
+					id="ask-button"
+					class="relative inline-flex w-12 h-12 flex-none items-center justify-center rounded-lg border-solid border-black/80 border bg-foreground text-background transition hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 disabled:pointer-events-none disabled:opacity-40 self-start"
+					hx-post="/partials/answer"
+					hx-trigger="click"
+					hx-target="#output-container"
+					hx-swap="afterbegin"
+					hx-disabled-elt="this"
+					hx-on:htmx:after-request="afterAskRequest()"
+				>
+					<span class="sr-only">Submit question</span>
+					<span id="ask-button-icon" aria-hidden="true" class="flex items-center justify-center">
+						<svg viewBox="0 0 24 24" fill="none" class="h-6 w-6">
+							<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</span>
+					<span id="ask-button-spinner" aria-hidden="true" class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200">
+						<span class="h-5 w-5 animate-spin rounded-full border-2 border-background/70 border-t-transparent"></span>
+					</span>
+				</button>
+			</div>
+			<p class="mt-2 self-end text-xs text-gray-400">enter to send • shift + enter for a new line</p>
 		</form>
 		<div id="output-container" class="mt-12 flex flex-col w-full" />
 	</div>
 </Main>
 
 <style>
-	.htmx-request > #ask-button-underline {
-		display: none;
+	#ask-button-icon,
+	#ask-button-spinner {
+		transition: opacity 0.2s ease;
 	}
 
-	@keyframes expandContract {
-		0%, 100% {
-			width: 0%;
-			left: 0;
-		}
-		50% {
-			width: 100%;
-			left: 0;
-		}
-		75% {
-			width: 0%;
-			left: 100%;
-		}
+	.htmx-request > #ask-button-icon {
+		opacity: 0;
+	}
+
+	.htmx-request > #ask-button-spinner {
+		opacity: 1;
 	}
 </style>
 
@@ -108,12 +113,26 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 	// @ts-ignore: global
 	window.afterAskRequest = afterAskRequest;
 
-	// handle textarea auto-vertical-resize
+	// handle textarea auto-vertical-resize + keyboard shortcuts
 	const input = document.getElementById('ask-textarea') as HTMLTextAreaElement | null;
+	const form = document.getElementById('ask-form') as HTMLFormElement | null;
 	if (input) {
 		input.addEventListener('input', function () {
 			input.style.height = 'auto';
 			input.style.height = `${input.scrollHeight}px`
+		});
+
+		input.addEventListener('keydown', function (event) {
+			if (event.key === 'Enter' && !event.shiftKey) {
+				event.preventDefault();
+				if (form) {
+					if (typeof form.requestSubmit === 'function') {
+						form.requestSubmit();
+					} else {
+						form.submit();
+					}
+				}
+			}
 		});
 	}
 </script>
