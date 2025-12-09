@@ -4,24 +4,27 @@ import Main from "../layouts/main.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
 ---
 <Main title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<div id="ask-section" class="mt-32 flex flex-1 flex-col w-full gap-10 min-h-[60vh]">
+	<div id="ask-section" class="mt-12 flex flex-1 flex-col w-full gap-10 min-h-[60vh]">
 		<div id="output-container" class="flex flex-col w-full"></div>
 
 		<template id="answer-template">
-			<div class="py-4 flex flex-col md:flex-row w-full gap-6 md:gap-12">
-				<div class="flex flex-col w-full md:w-1/2">
-					<h4 class="font-bold mb-2 md:mb-4">question:</h4>
-					<p class="text-sm italic question-text"></p>
-				</div>
-				<div class="flex flex-col w-full md:w-1/2">
-					<h4 class="font-bold mb-2 md:mb-4">answer:</h4>
-					<p class="text-sm generated-answer"></p>
-					<p class="text-xs text-gray-500 mt-2 answer-reference"></p>
-				</div>
-			</div>
+      		<div class="py-4 flex flex-col">
+                <span class="text-xs text-slate-400">question and answer</span>
+          		<div class="flex flex-col md:flex-row w-full gap-6 md:gap-12">
+         			<div class="flex flex-col w-full md:w-1/2">
+            				<h4 class="font-bold mb-2 md:mb-4">question:</h4>
+            				<p class="text-sm italic question-text"></p>
+         			</div>
+         			<div class="flex flex-col w-full md:w-1/2">
+            				<h4 class="font-bold mb-2 md:mb-4">answer:</h4>
+            				<p class="text-sm generated-answer"></p>
+            				<p class="text-xs text-gray-500 mt-2 answer-reference"></p>
+         			</div>
+          		</div>
+      		</div>
 		</template>
 
-		<div id="ask-form-wrapper" class="mt-6 transition-all duration-300 ease-out">
+		<div id="ask-form-wrapper" class="sticky bottom-10 transition-all duration-300 ease-out">
 			<span class="text-xs text-slate-400">prompt form</span>
 			<form
 				id="ask-form"
