@@ -5,10 +5,12 @@ import type { Env } from '../src/types/env';
 
 const textEncoder = new TextEncoder();
 
-function streamFallbackResponse(message: string, headers?: Record<string, string>) {
+function streamResponse(message: string | Record<string, unknown>, headers?: Record<string, string>) {
+  const payload = typeof message === 'string' ? { response: message } : message;
+
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
-      controller.enqueue(textEncoder.encode(`data: ${JSON.stringify({ response: message })}\n\n`));
+      controller.enqueue(textEncoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
       controller.enqueue(textEncoder.encode('data: [DONE]\n\n'));
       controller.close();
     }
@@ -22,7 +24,7 @@ function streamFallbackResponse(message: string, headers?: Record<string, string
   });
 }
 
-// headers are used in local dev for CORS
+// headers are used when testing locally or via dev Workers
 export async function onRequest (context: EventContext<Env, '', {}>, headers?: any) {
   try {
     // const ai = new Ai(context.env.AI);
@@ -32,60 +34,53 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
     if (!input) {
       throw new Error('No input provided')
     } else {
-      // embed their input, compare to all embeddings, retrieve matches that are above a certain threshold from the database, and add to prompt context
+      console.log('[ask] received input', { input })
+
       const embeddings = await context.env.AI.run('@cf/baai/bge-base-en-v1.5', { text: input })
-      const vectors = embeddings.data[0]
+      const vectors = embeddings?.data?.[0]
+
+      if (!vectors) {
+        throw new Error('Unable to generate embeddings for query input')
+      }
 
       const SIMILARITY_CUTOFF = 0.50
       const vectorQuery = await context.env.VECTORIZE_INDEX.query(vectors, { topK: 5, returnMetadata: true });
-      const matchesAboveCutoff = (vectorQuery?.matches || [])
+      const matchSummaries = (vectorQuery?.matches || []).slice(0, 5).map((match: any) => ({
+        id: match.id,
+        score: match.score,
+        hasMetadata: !!match.metadata,
+        question: match.metadata?.question,
+      }))
+      console.log('[ask] similarity results', { input, matches: matchSummaries })
+
+      const metadataMatches = (vectorQuery?.matches || [])
         .filter((match: any) => match.score > SIMILARITY_CUTOFF)
+        .filter((match: any) => typeof match.metadata?.answer === 'string')
 
-      const metadataMatches = matchesAboveCutoff.filter((match: any) => match.metadata?.answer && match.metadata?.question)
-      const contextEntries: string[] = metadataMatches.map((match: any) => {
-        return `Q: ${match.metadata.question}\nA: ${match.metadata.answer}`
-      })
-
-      if (!metadataMatches.length && matchesAboveCutoff.length) {
-        const vecIds = matchesAboveCutoff.map((match: any) => match.id)
-        const query = `SELECT * FROM texts WHERE id IN (${vecIds.join(", ")})`
-        const { results } = await context.env.DB.prepare(query).bind().all()
-        if (results) {
-          const matchedTexts = results.map((v: any) => v.text)
-          contextEntries.push(...matchedTexts.map((t: any) => t))
-        }
+      if (!metadataMatches.length) {
+        return streamResponse("Hmm, I'm not sure about that yet. Try asking about my background, interests, or projects.", headers)
       }
 
-      if (!contextEntries.length) {
-        return streamFallbackResponse("Hmm, I'm not sure about that yet. Try asking about my background, interests, or projects.", headers)
-      }
-
-      const contextMessage = `Context:\n${contextEntries.map((entry: string) => `- ${entry}`).join("\n")}`
-      const systemPrompt = `When answering the question or responding, use any following context provided, if it is provided and relevant. If the question refers to Iain, use any following context to answer it.`
-      // TODO: consider feeding in the previous conversation context?
-      const response = await context.env.AI.run('@cf/meta/llama-3-8b-instruct', {
-        messages: [
-          { role: 'system', content: `${systemPrompt}\n\n${contextMessage}` },
-          { role: 'user', content: input },
-        ],
-        stream: true
-      }, {
-        gateway: {
-          id: context.env.CLF_AI_GATEWAY_ID,
-          cache: 60000
-        }
+      const bestMatch = metadataMatches[0]
+      console.log('[ask] best match selected', {
+        input,
+        matchId: bestMatch.id,
+        score: bestMatch.score,
+        question: bestMatch.metadata?.question,
       })
 
-      return new Response(
-        // @ts-ignore: TODO fix response type
-        response,
-        {
-          headers: {
-            ...(headers || {}),
-            "content-type": "text/event-stream"
-          }
-        }
-      );
+      const answer = (bestMatch.metadata.answer as string).trim()
+      const referenceQuestion = typeof bestMatch.metadata.question === 'string' ? bestMatch.metadata.question : undefined
+
+      if (!answer.length) {
+        return streamResponse("Hmm, I'm not sure about that yet. Try asking about my background, interests, or projects.", headers)
+      }
+
+      return streamResponse({
+        response: answer,
+        reference: referenceQuestion,
+        confidence: bestMatch.score
+      }, headers)
     }
   } catch (error: any) {
     console.log({ error })
