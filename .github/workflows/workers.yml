@@ -3,28 +3,60 @@ on:
   push:
     branches:
       - main
+      - development
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      
       - name: Install Bun
         uses: oven-sh/setup-bun@v1
+      
       - name: Install dependencies
         run: bun install
+      
       - name: Build Astro site
         run: bun run build
-      - name: Build QA embeddings
+      
+      # Production deployment (main branch)
+      - name: Build QA embeddings (Production)
+        if: github.ref == 'refs/heads/main'
         run: bun run build:qa:prod
-      - name: Upload vectors to Vectorize
+      
+      - name: Upload vectors to Vectorize (Production)
+        if: github.ref == 'refs/heads/main'
         run: bun run vector:upsert:prod
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLF_ACCOUNT_ID }}
-      - name: Deploy to Cloudflare Workers
+      
+      - name: Deploy to Cloudflare Workers (Production)
+        if: github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLF_API_TOKEN }}
           accountId: ${{ secrets.CLF_ACCOUNT_ID }}
           command: deploy --minify
+      
+      # Development deployment (development branch)
+      - name: Build QA embeddings (Development)
+        if: github.ref == 'refs/heads/development'
+        run: bun run build:qa:development
+      
+      - name: Upload vectors to Vectorize (Development)
+        if: github.ref == 'refs/heads/development'
+        run: bun run vector:upsert:development
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLF_ACCOUNT_ID }}
+      
+      - name: Deploy to Cloudflare Workers (Development)
+        if: github.ref == 'refs/heads/development'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLF_API_TOKEN }}
+          accountId: ${{ secrets.CLF_ACCOUNT_ID }}
+          command: deploy --minify --env development
