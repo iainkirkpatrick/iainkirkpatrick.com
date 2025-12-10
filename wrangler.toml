@@ -1,6 +1,7 @@
 name = "iainkirkpatrick-dot-com-workers"
 main = "workers/index.ts"
 compatibility_date = "2023-11-21"
+pages_build_output_dir = "./dist"
 
 # Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
 # Docs: https://developers.cloudflare.com/r2/api/workers/workers-api-usage/

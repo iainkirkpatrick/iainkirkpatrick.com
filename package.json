@@ -2,6 +2,9 @@
   "name": "iainkirkpatrick.com",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=24.11.1 <25"
+  },
   "scripts": {
     "dev": "concurrently \"astro dev --port 3000\" \"bun functions\"",
     "functions": "bunx wrangler@latest dev --remote --env development",
