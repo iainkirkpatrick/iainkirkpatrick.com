@@ -15,7 +15,7 @@ remote = true
 # Vectorize binding for Q&A corpus
 [[vectorize]]
 binding = "VECTORIZE_INDEX"
-index_name = "iainkirkpatrick"
+index_name = "iainkirkpatrick-production"
 remote = true
 
 # Development environment
