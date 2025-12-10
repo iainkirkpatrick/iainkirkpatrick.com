@@ -25,6 +25,9 @@ jobs:
       - name: Build QA embeddings (Production)
         if: github.ref == 'refs/heads/main'
         run: bun run build:qa:prod
+        env:
+          CLF_ACCOUNT_ID: ${{ secrets.CLF_ACCOUNT_ID }}
+          CLF_API_TOKEN: ${{ secrets.CLF_API_TOKEN }}
       
       - name: Upload vectors to Vectorize (Production)
         if: github.ref == 'refs/heads/main'
@@ -45,6 +48,9 @@ jobs:
       - name: Build QA embeddings (Development)
         if: github.ref == 'refs/heads/development'
         run: bun run build:qa:development
+        env:
+          CLF_ACCOUNT_ID: ${{ secrets.CLF_ACCOUNT_ID }}
+          CLF_API_TOKEN: ${{ secrets.CLF_API_TOKEN }}
       
       - name: Upload vectors to Vectorize (Development)
         if: github.ref == 'refs/heads/development'
