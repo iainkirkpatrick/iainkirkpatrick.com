@@ -10,18 +10,18 @@ const isActive = href === pathname || href === pathname.replace(/\/$/, '');
 ---
 
 <a
-	href={href}
-	data-active={isActive ? 'true' : undefined}
-	class:list={['relative inline-flex flex-col items-start pb-2 group transition-colors duration-100 ease-linear focus-visible:outline-none focus-visible:shadow-bottom-ring', className]}
-	{...props}
+  href={href}
+  data-active={isActive ? 'true' : undefined}
+  class:list={['relative inline-flex flex-col items-start pb-2 group transition-colors duration-100 ease-linear focus-visible:outline-none focus-visible:shadow-bottom-ring', className]}
+  {...props}
 >
-	<slot />
-	<span
-		aria-hidden="true"
-		class:list={[
-			'pointer-events-none absolute left-0 -bottom-[2px] block h-[2px] w-0 bg-red-500 transition-all duration-200 group-hover:w-full group-focus-visible:w-full',
-			{ 'w-full': isActive }
-		]}
-	></span>
+  <slot />
+  <span
+    aria-hidden="true"
+    class:list={[
+      'pointer-events-none absolute left-0 -bottom-[2px] block h-[2px] w-0 bg-red-500 transition-all duration-200 group-hover:w-full group-focus-visible:w-full',
+      { 'w-full': isActive }
+    ]}
+  ></span>
 </a>
 

@@ -6,27 +6,27 @@ import Main from '../../layouts/main.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 
 const posts = (await getCollection('posts')).sort(
-	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+  (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
 );
 ---
 
 <Main title="Posts" description="Collected posts, large and small.">
-	<div class="mt-12 flex flex-col w-full">
-		<section>
-			<ul>
-				{
-					posts.map((post) => (
-						<li class="group">
-							<a href={`/posts/${post.slug}/`}>
-								<h4 class="font-semibold group-hover:underline">{post.data.title}</h4>
-								<p class="">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</section>
-	</div>
+  <div class="mt-12 flex flex-col w-full">
+    <section>
+      <ul>
+        {
+          posts.map((post) => (
+            <li class="group">
+              <a href={`/posts/${post.slug}/`}>
+                <h4 class="font-semibold group-hover:underline">{post.data.title}</h4>
+                <p class="">
+                  <FormattedDate date={post.data.pubDate} />
+                </p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </Main>
