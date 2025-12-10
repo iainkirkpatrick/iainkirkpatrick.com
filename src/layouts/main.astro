@@ -2,23 +2,23 @@
 import BaseHead from '../components/BaseHead.astro';
 import Navbar from '../components/Navbar.astro';
 interface Props {
-	title: string;
-	description: string;
+  title: string;
+  description: string;
 };
 const { title, description } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-	</head>
-	<body class="flex flex-col items-center w-screen h-screen bg-[#FAF7F2]">
-		<div class="flex flex-col items-center w-full max-w-2xl h-full">
-			<Navbar />
-			<main class="px-6 md:px-12 flex flex-col w-full">
-				<slot />
-			</main>
-		</div>
-	</body>
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class="flex flex-col items-center w-screen h-screen bg-[#FAF7F2]">
+    <div class="flex flex-col items-center w-full max-w-2xl h-full">
+      <Navbar />
+      <main class="px-6 md:px-12 flex flex-col w-full">
+        <slot />
+      </main>
+    </div>
+  </body>
 </html>
 

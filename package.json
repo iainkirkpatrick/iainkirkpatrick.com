@@ -23,7 +23,9 @@
     "deploy-functions:development": "bun run deploy:worker:development",
     "preview": "astro preview",
     "astro": "astro",
-    "unit": "bunx vitest"
+    "unit": "bunx vitest",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check ."
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -41,8 +43,8 @@
     "@cloudflare/workers-types": "^4.20251205.0",
     "@tailwindcss/typography": "^0.5.19",
     "concurrently": "^9.2.1",
+    "oxfmt": "^0.17.0",
     "vitest": "^1.6.1",
     "wrangler": "^4.53.0"
   }
-
 }
