@@ -13,7 +13,8 @@
 - Use `nvm use` (or your preferred version manager) – the repo ships a `.nvmrc` pinning Node `24.11.1`, and `package.json` enforces `engines.node >=24.11.1 <25`.
 - Make sure the Pages project respects that version (Pages auto-detects `.nvmrc`, or set `NODE_VERSION=24.11.1` in the dashboard to force it).
 - The Worker runtime itself is V8-based, so specifying Node 24 only affects the Pages build/install environment and Wrangler CLI, not the deployed Worker execution environment.
-- `wrangler.toml` declares `pages_build_output_dir = "./dist"` so Pages treats the Worker config as valid when reading build settings.
+- `wrangler.toml` now only carries Pages-specific metadata (`pages_build_output_dir = "./dist"`) so Cloudflare’s build system stays happy; the Worker-specific config moved to `wrangler.worker.toml`.
+- All manual Wrangler invocations need `--config wrangler.worker.toml` (the package scripts already include it) so you don’t accidentally load the Pages-only config.
 
 ### embeddings workflow
 1. Edit `data/qa_corpus.json` to add or tweak question/answer pairs.
