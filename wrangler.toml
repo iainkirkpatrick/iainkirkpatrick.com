@@ -48,6 +48,9 @@ index_name = "iainkirkpatrick"
 [env.development]
 name = "iainkirkpatrick-dot-com-workers-development"
 
+[env.development.vars]
+APP_ENV = "development"
+
 [env.development.ai]
 binding = "AI"
 

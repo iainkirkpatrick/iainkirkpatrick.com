@@ -43,7 +43,7 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
         throw new Error('Unable to generate embeddings for query input')
       }
 
-      const SIMILARITY_CUTOFF = 0.50
+      const SIMILARITY_CUTOFF = 0.75
       const vectorQuery = await context.env.VECTORIZE_INDEX.query(vectors, { topK: 5, returnMetadata: true });
       const matchSummaries = (vectorQuery?.matches || []).slice(0, 5).map((match: any) => ({
         id: match.id,
@@ -70,17 +70,23 @@ export async function onRequest (context: EventContext<Env, '', {}>, headers?: a
       })
 
       const answer = (bestMatch.metadata.answer as string).trim()
-      const referenceQuestion = typeof bestMatch.metadata.question === 'string' ? bestMatch.metadata.question : undefined
 
       if (!answer.length) {
         return streamResponse("Hmm, I'm not sure about that yet. Try asking about my background, interests, or projects.", headers)
       }
 
-      return streamResponse({
+      const isDevelopment = context.env.APP_ENV === 'development'
+      const responsePayload: Record<string, unknown> = {
         response: answer,
-        reference: referenceQuestion,
-        confidence: bestMatch.score
-      }, headers)
+      }
+
+      if (isDevelopment) {
+        const referenceQuestion = typeof bestMatch.metadata.question === 'string' ? bestMatch.metadata.question : undefined
+        responsePayload.reference = referenceQuestion
+        responsePayload.confidence = bestMatch.score
+      }
+
+      return streamResponse(responsePayload, headers)
     }
   } catch (error: any) {
     console.log({ error })
