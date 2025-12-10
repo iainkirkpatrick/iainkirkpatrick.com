@@ -8,6 +8,13 @@
 - `bun dev` runs Astro + `wrangler dev --env development`, so the Worker uses the remote-development bindings (Vectorize, AI, etc.).
 - If you need to point dev builds at production resources instead, override the command or run Wrangler manually with `--env production`.
 
+### cloudflare pages runtime
+- Cloudflare’s v3 build image ships Node 22 by default but supports "any" version via `.nvmrc`/`NODE_VERSION` overrides ([docs](https://developers.cloudflare.com/pages/configuration/build-image/#supported-languages-and-tools)); we run on the latest LTS (Node `24.11.1`) so Astro 5, Wrangler 4, and oxfmt stay within supported ranges.
+- Use `nvm use` (or your preferred version manager) – the repo ships a `.nvmrc` pinning Node `24.11.1`, and `package.json` enforces `engines.node >=24.11.1 <25`.
+- Make sure the Pages project respects that version (Pages auto-detects `.nvmrc`, or set `NODE_VERSION=24.11.1` in the dashboard to force it).
+- The Worker runtime itself is V8-based, so specifying Node 24 only affects the Pages build/install environment and Wrangler CLI, not the deployed Worker execution environment.
+- `wrangler.toml` declares `pages_build_output_dir = "./dist"` so Pages treats the Worker config as valid when reading build settings.
+
 ### embeddings workflow
 1. Edit `data/qa_corpus.json` to add or tweak question/answer pairs.
 2. Run `bun run build:qa` (requires `CLF_ACCOUNT_ID`, `CLF_API_TOKEN`, and `CLF_VECTORIZE_INDEX`). This writes:
