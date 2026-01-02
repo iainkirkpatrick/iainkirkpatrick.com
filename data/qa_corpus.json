@@ -1,34 +1,144 @@
 {
   "entries": [
     {
-      "id": "qa-who-is-iain",
+      "id": "qa-001",
       "question": "Who is Iain Kirkpatrick?",
-      "answer": "Iain Kirkpatrick is a software engineer and technical leader from New Zealand who now lives in Canberra, Australia. He previously co-founded Root Systems and served as a director, tech lead, and engineer at Bamboo Creative."
+      "answer": "I'm a software engineer and technical leader based in Canberra, Australia. I work at Ruminati building software that makes agricultural emissions reporting and data capture easier. I previously co-founded the software consultancy Bamboo Creative in New Zealand."
     },
     {
-      "id": "qa-what-does-iain-work-on",
-      "question": "What kind of work does Iain focus on?",
-      "answer": "Iain focuses on software engineering and product development, often leading small, multi-disciplinary teams to ship thoughtful experiences for the web."
+      "id": "qa-002",
+      "question": "What kind of work do you focus on?",
+      "answer": "I focus on building web products with small, multi-disciplinary teams, usually working across product, engineering, and UX to ship thoughtful, practical experiences."
     },
     {
-      "id": "qa-where-did-iain-train",
-      "question": "Where did Iain train as a developer?",
-      "answer": "Iain attended Dev Academy in Wellington, New Zealand in 2015, retraining from a GIS and cartography background into software development."
+      "id": "qa-003",
+      "question": "What's your background?",
+      "answer": "I retrained into software development in 2015 after working in GIS and cartography. Since then I've worked across product, engineering, and leadership roles."
     },
     {
-      "id": "qa-where-has-iain-lived",
-      "question": "Where has Iain lived?",
-      "answer": "Iain was born in Christchurch, New Zealand, spent many years working in Wellington, and currently lives in Canberra, Australia while collaborating remotely across time zones."
+      "id": "qa-004",
+      "question": "Where are you based?",
+      "answer": "I live in Canberra, Australia."
     },
     {
-      "id": "qa-what-is-this-site-built-with",
-      "question": "What is this site built with?",
-      "answer": "The site runs on Astro with Tailwind CSS for styling, and the AI interactions are powered by Cloudflare Workers, Workers AI, and Vectorize."
+      "id": "qa-005",
+      "question": "Where are you from?",
+      "answer": "I was born in Christchurch, grew up in Hamilton, spent years in Wellington, and now live in Canberra."
     },
     {
-      "id": "qa-what-is-iain-reading",
-      "question": "What is Iain currently learning or reading?",
-      "answer": "He is working through Thorsten Ball's books on writing an interpreter and compiler in Go as a way to deepen his understanding of language tooling."
+      "id": "qa-006",
+      "question": "What's your current role?",
+      "answer": "I'm a software engineer and technical leader at Ruminati."
+    },
+    {
+      "id": "qa-007",
+      "question": "What do you enjoy building?",
+      "answer": "Products that feel clear, reliable, and human. I especially enjoy systems that remove friction for people."
+    },
+    {
+      "id": "qa-008",
+      "question": "What are you known for in teams?",
+      "answer": "Pragmatism, strong technical taste, and a bias toward shipping."
+    },
+    {
+      "id": "qa-009",
+      "question": "What are you interested in right now?",
+      "answer": "Building resilient systems, improving product UX, and learning more about interpreters and language tooling."
+    },
+    {
+      "id": "qa-010",
+      "question": "Are you open to collaboration or consulting?",
+      "answer": "I'm open to the right opportunities. The best way to reach me is via the contact links on this site."
+    },
+    {
+      "id": "qa-011",
+      "question": "Where can I find you online?",
+      "answer": "Links to my GitHub, LinkedIn, and other profiles are on this site."
+    },
+    {
+      "id": "qa-012",
+      "question": "What projects are you proud of?",
+      "answer": "I'm proud of the work at Ruminati and the products I helped ship at Bamboo Creative. I'm happiest when the work makes someone's job meaningfully easier."
+    },
+    {
+      "id": "qa-013",
+      "question": "Is this a chatbot like ChatGPT?",
+      "answer": "Not quite. This site answers by matching your question to a curated set of Q&A pairs, so it stays grounded in what I've actually said."
+    },
+    {
+      "id": "qa-014",
+      "question": "Why don't you answer follow-up questions?",
+      "answer": "This experience is single-turn: each answer is matched to one stored Q&A. It doesn't keep conversational context like ChatGPT."
+    },
+    {
+      "id": "qa-015",
+      "question": "What should I ask?",
+      "answer": "Ask about my background, work, interests, or the way this site is built. The system works best for concise, factual questions."
+    },
+    {
+      "id": "qa-016",
+      "question": "Why do some answers feel short?",
+      "answer": "The answers are intentionally compact so they're easy to scan. I'd rather be clear and brief than vague and long."
+    },
+    {
+      "id": "qa-017",
+      "question": "What happens if you don't have an answer?",
+      "answer": "You'll get the closest match I do have. If it's off, try rephrasing your question."
+    },
+    {
+      "id": "qa-018",
+      "question": "Can this make things up?",
+      "answer": "It doesn't generate new facts, but it can return a close match that isn't perfect. Think of it as a curated FAQ with semantic search."
+    },
+    {
+      "id": "qa-019",
+      "question": "How does this site work?",
+      "answer": "Your question is embedded, compared to a small Q&A corpus, and the closest match is returned."
+    },
+    {
+      "id": "qa-020",
+      "question": "What's this site built with?",
+      "answer": "Astro and Tailwind for the site, Cloudflare Workers for the API, and Vectorize for search."
+    },
+    {
+      "id": "qa-021",
+      "question": "Is this RAG?",
+      "answer": "It's a retrieval-only experience, not generation. It uses embeddings to find the best match."
+    },
+    {
+      "id": "qa-022",
+      "question": "What AI model powers it?",
+      "answer": "The embeddings are produced by Workers AI and stored in Vectorize."
+    },
+    {
+      "id": "qa-023",
+      "question": "Is the source code available?",
+      "answer": "Yes. The GitHub repo is linked on the site."
+    },
+    {
+      "id": "qa-024",
+      "question": "Does this site use analytics?",
+      "answer": "If you ask, I can explain the current analytics setup and privacy approach."
+    },
+    {
+      "id": "qa-025",
+      "question": "Is this site privacy-friendly?",
+      "answer": "I aim to keep it minimal and respectful. I can share specifics if you're curious."
+    },
+    {
+      "id": "qa-026",
+      "question": "What's your approach to software?",
+      "answer": "Make it clear, make it reliable, and don't overcomplicate it."
+    },
+    {
+      "id": "qa-027",
+      "question": "What do you value in a product?",
+      "answer": "Small details that reduce friction and make people feel confident."
+    },
+    {
+      "id": "qa-028",
+      "question": "What do you think about AI?",
+      "answer": "It's useful when it helps people move faster, but it needs strong boundaries and clear intent."
     }
   ]
 }
