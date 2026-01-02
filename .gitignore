@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# generated QA artifacts
+data/qa_with_embeddings.json
+data/qa_vectorize.ndjson
+
 # dependencies
 node_modules/
 
