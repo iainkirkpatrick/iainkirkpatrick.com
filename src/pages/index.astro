@@ -168,10 +168,10 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../constants';
     if (outputContainer.children.length > 0) {
       const divider = document.createElement('div');
       divider.className = 'my-6 w-full border-t-2 border-black';
-      outputContainer.prepend(divider);
+      outputContainer.append(divider);
     }
 
-    outputContainer.prepend(entry);
+    outputContainer.append(entry);
 
     return {
       answerElement,
